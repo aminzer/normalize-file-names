@@ -39,8 +39,9 @@ export async function ensureDirExists(dirPath: string): Promise<void> {
 }
 
 export async function getCreationTimeFromFs(filePath: string): Promise<number> {
-  const stats = await fs.stat(filePath);
-  return stats.birthtime.valueOf();
+  const { birthtime, mtime } = await fs.stat(filePath);
+
+  return Math.min(birthtime.valueOf(), mtime.valueOf());
 }
 
 function getNextPossibleFilePath(filePath: string) {
