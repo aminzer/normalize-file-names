@@ -13,7 +13,7 @@ export function getCreationTimeFromFileName(fileName: string): number {
 
 export function getOutputFileName(inputFileName: string, creationTime: number): string {
   const { ext } = path.parse(inputFileName);
-  const formattedCreationTime = format(creationTime, 'yyyyMMdd_HHmmssSSS');
+  const formattedCreationTime = format(creationTime, 'yyyy.MM.dd_HH.mm.ss.SSS');
 
   return `${formattedCreationTime}${ext}`;
 }
