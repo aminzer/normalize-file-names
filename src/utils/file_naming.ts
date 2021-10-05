@@ -1,15 +1,19 @@
-import { getFileNameWithoutExtension } from './path';
+import * as path from 'path';
+import { format } from 'date-fns';
 
-export function recognizeCreationTime(filePath: string): number {
-  const fileNameWithoutExtension = getFileNameWithoutExtension(filePath);
+export function getCreationTimeFromFileName(fileName: string): number {
+  const { name } = path.parse(fileName);
 
-  if (/^\d+$/.test(fileNameWithoutExtension)) {
-    return Number.parseInt(fileNameWithoutExtension, 10);
+  if (/^\d+$/.test(name)) {
+    return +name;
   }
 
   return null;
 }
 
-export function getOutputFileName(): void {
-  // TODO impl
+export function getOutputFileName(inputFileName: string, creationTime: number): string {
+  const { ext } = path.parse(inputFileName);
+  const formattedCreationTime = format(creationTime, 'yyyyMMdd_HHmmss');
+
+  return `${formattedCreationTime}${ext}`;
 }

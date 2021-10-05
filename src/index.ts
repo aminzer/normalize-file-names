@@ -1,12 +1,35 @@
 import * as path from 'path';
 import { iterateDirectoryChildren } from '@aminzer/dir-diff';
-import { inputDirPath, outputDirPath, unrecognizedFilesOutputDirPath } from './config';
 import { log } from './logger';
-import { recognizeCreationTime } from './utils/file_naming';
-import { getFileCount, copyFile } from './utils/fs';
+import {
+  getCreationTimeFromFileName,
+  getOutputFileName,
+} from './utils/file_naming';
+import {
+  inputDirPath,
+  outputDirPath,
+  unrecognizedFilesOutputDirPath,
+  validateConfig,
+} from './config';
+import {
+  ensureDirExists,
+  getFileCount,
+  getCreationTimeFromFs,
+  copyFile,
+} from './utils/fs';
+
+async function processFile(sourceFilePath: string, targetFilePath: string): Promise<void> {
+  await copyFile(sourceFilePath, targetFilePath, {
+    keepSeparateIfExists: true,
+  });
+}
 
 (async () => {
   try {
+    await validateConfig();
+
+    await ensureDirExists(unrecognizedFilesOutputDirPath);
+
     const totalFileCount = await getFileCount(inputDirPath);
     log(`Total file count: ${totalFileCount}`);
 
@@ -15,22 +38,24 @@ import { getFileCount, copyFile } from './utils/fs';
         return;
       }
 
-      const creationTime = recognizeCreationTime(fsEntry.absolutePath);
+      const creationTimeFromFileName = getCreationTimeFromFileName(fsEntry.name);
 
-      if (creationTime === null) {
-        const outputFilePath = path.join(unrecognizedFilesOutputDirPath, fsEntry.name);
-        await copyFile(fsEntry.absolutePath, outputFilePath);
+      if (creationTimeFromFileName !== null) {
+        const outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFileName);
+        const outputFilePath = path.join(outputDirPath, outputFileName);
+
+        await processFile(fsEntry.absolutePath, outputFilePath);
         return;
       }
 
-      log(`${fsEntry.name} -> ${creationTime}`);
+      const creationTimeFromFs = await getCreationTimeFromFs(fsEntry.absolutePath);
+      const outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs);
+      const outputFilePath = path.join(unrecognizedFilesOutputDirPath, outputFileName);
 
-      const outputFilePath = path.join(outputDirPath, fsEntry.name);
-
-      log(outputFilePath);
-
-      await copyFile(fsEntry.absolutePath, outputFilePath);
+      await processFile(fsEntry.absolutePath, outputFilePath);
     });
+
+    log('Done');
   } catch (err) {
     log(err);
   }

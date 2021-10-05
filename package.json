@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@aminzer/dir-diff": "^4.0.4",
+    "date-fns": "^2.25.0",
     "dotenv": "^10.0.0",
     "single-line-log": "^1.1.2"
   },
