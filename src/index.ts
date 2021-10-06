@@ -10,6 +10,7 @@ import {
   outputDirPath,
   unrecognizedFilesOutputDirPath,
   fetchCreationTimeFromFsForUnrecognizedFiles,
+  isDryRun,
   validateConfig,
 } from './config';
 import {
@@ -20,6 +21,11 @@ import {
 } from './utils/fs';
 
 async function processFile(sourceFilePath: string, targetFilePath: string): Promise<void> {
+  if (isDryRun) {
+    log(`"${path.parse(sourceFilePath).base}" -> "${path.parse(targetFilePath).base}"`);
+    return;
+  }
+
   await copyFile(sourceFilePath, targetFilePath, {
     keepSeparateIfExists: true,
   });
@@ -35,7 +41,11 @@ async function processFile(sourceFilePath: string, targetFilePath: string): Prom
     let recognizedFileCount = 0;
     let unrecognizedFileCount = 0;
 
-    const logProgress = () => {
+    const logProgress = (): void => {
+      if (isDryRun) {
+        return;
+      }
+
       const processedFileCount = recognizedFileCount + unrecognizedFileCount;
       const progressPercentage = Math.round(
         100 * (totalFileCount > 0 ? processedFileCount / totalFileCount : 1),
