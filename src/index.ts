@@ -9,6 +9,7 @@ import {
   inputDirPath,
   outputDirPath,
   unrecognizedFilesOutputDirPath,
+  fetchCreationTimeFromFsForUnrecognizedFiles,
   validateConfig,
 } from './config';
 import {
@@ -50,28 +51,31 @@ async function processFile(sourceFilePath: string, targetFilePath: string): Prom
         return;
       }
 
-      let creationTime;
-      let targetDirPath;
-
+      let outputFilePath;
       const creationTimeFromFileName = getCreationTimeFromFileName(fsEntry.name);
 
       if (creationTimeFromFileName !== null) {
-        creationTime = creationTimeFromFileName;
-        targetDirPath = outputDirPath;
+        const outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFileName);
+
+        outputFilePath = path.join(outputDirPath, outputFileName);
         recognizedFileCount += 1;
       } else {
-        creationTime = await getCreationTimeFromFs(fsEntry.absolutePath);
-        targetDirPath = unrecognizedFilesOutputDirPath;
+        let outputFileName = fsEntry.name;
+
+        if (fetchCreationTimeFromFsForUnrecognizedFiles) {
+          const creationTimeFromFs = await getCreationTimeFromFs(fsEntry.absolutePath);
+          outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs);
+        }
+
+        outputFilePath = path.join(unrecognizedFilesOutputDirPath, outputFileName);
         unrecognizedFileCount += 1;
       }
-
-      const outputFileName = getOutputFileName(fsEntry.name, creationTime);
-      const outputFilePath = path.join(targetDirPath, outputFileName);
 
       await processFile(fsEntry.absolutePath, outputFilePath);
     });
 
     clearInterval(loggingIntervalId);
+
     logProgress();
     log();
     log(`Recognized files: ${recognizedFileCount}`);
