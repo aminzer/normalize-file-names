@@ -35,7 +35,9 @@ async function processFile(sourceFilePath: string, targetFilePath: string): Prom
   try {
     await validateConfig();
 
-    await ensureDirExists(unrecognizedFilesOutputDirPath);
+    if (!isDryRun) {
+      await ensureDirExists(unrecognizedFilesOutputDirPath);
+    }
 
     const totalFileCount = await getFileCount(inputDirPath);
     let recognizedFileCount = 0;
