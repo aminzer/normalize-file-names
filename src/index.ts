@@ -4,7 +4,7 @@ import { log, logSingleLine } from './logger';
 import {
   getCreationTimeFromFileName,
   getOutputFileName,
-} from './utils/file_naming';
+} from './file_naming';
 import {
   inputDirPath,
   outputDirPath,
@@ -14,11 +14,11 @@ import {
   validateConfig,
 } from './config';
 import {
-  ensureDirExists,
-  getFileCount,
-  getCreationTimeFromFs,
   copyFile,
-} from './utils/fs';
+  ensureDirExists,
+  getCreationTimeFromFs,
+  getFileCount,
+} from './utils';
 
 async function processFile(sourceFilePath: string, targetFilePath: string): Promise<void> {
   if (isDryRun) {

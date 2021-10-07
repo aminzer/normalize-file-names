@@ -1,4 +1,4 @@
-import { isDirExist } from '../utils/fs';
+import { isDirExist } from '../utils';
 import { inputDirPath, outputDirPath } from './config';
 
 export default async function validateConfig(): Promise<void> {
