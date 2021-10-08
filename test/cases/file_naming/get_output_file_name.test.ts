@@ -5,7 +5,7 @@ describe('getOutputFileName', () => {
     it('returns filename containing creation time in expected format', () => {
       const fileName = 'test';
       const creationTime = new Date('2001-02-03 04:05:06').valueOf();
-      const expectedFileName = '2001.02.03_04.05.06.000';
+      const expectedFileName = '20010203_040506000';
 
       expect(getOutputFileName(fileName, creationTime)).toBe(expectedFileName);
     });
@@ -15,7 +15,17 @@ describe('getOutputFileName', () => {
     it('returns filename containing creation time in expected format', () => {
       const fileName = 'test.jpg';
       const creationTime = new Date('2001-02-03 04:05:06').valueOf();
-      const expectedFileName = '2001.02.03_04.05.06.000.jpg';
+      const expectedFileName = '20010203_040506000.jpg';
+
+      expect(getOutputFileName(fileName, creationTime)).toBe(expectedFileName);
+    });
+  });
+
+  describe('when file extension is in upper case', () => {
+    it('converts extension to lower case', () => {
+      const fileName = 'test.JPG';
+      const creationTime = new Date('2001-02-03 04:05:06').valueOf();
+      const expectedFileName = '20010203_040506000.jpg';
 
       expect(getOutputFileName(fileName, creationTime)).toBe(expectedFileName);
     });
