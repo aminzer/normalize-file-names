@@ -39,6 +39,16 @@ async function processFile(sourceFilePath: string, targetFilePath: string): Prom
       await ensureDirExists(unrecognizedFilesOutputDirPath);
     }
 
+    log(`Input dir: "${inputDirPath}"`);
+    log(`Output dir: "${outputDirPath}"`);
+    if (isDryRun) {
+      log("! This is dry run: files won't be copied to the output dir");
+    }
+    if (fetchCreationTimeFromFsForUnrecognizedFiles) {
+      log('! For unrecognized file names creation time will be fetched from FS attributes');
+    }
+    log();
+
     const totalFileCount = await getFileCount(inputDirPath);
     let recognizedFileCount = 0;
     let unrecognizedFileCount = 0;
