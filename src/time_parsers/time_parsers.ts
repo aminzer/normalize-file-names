@@ -1,16 +1,31 @@
 import { parseDate } from './utils';
 import { TimeParser } from './types';
-
-const sep = '[ ._-]';
+import {
+  d2, d4, d6, d8, d14, _,
+} from './regex';
 
 const timeParsers: TimeParser[] = [
   (input: string): number => {
-    const match = input.match(/(\d{14})/);
-    return match ? parseDate(match[1], 'yyyyMMddHHmmss') : null;
+    const match = input.match(d14);
+    return match ? parseDate(match[1]) : null;
   },
   (input: string): number => {
-    const match = input.match(new RegExp(`(\\d{8})${sep}(\\d{6})`));
-    return match ? parseDate(match[1] + match[2], 'yyyyMMddHHmmss') : null;
+    const match = input.match(`${d8}${_}${d6}`);
+    if (!match) {
+      return null;
+    }
+
+    const timeStr = match.slice(1, 3).join('');
+    return parseDate(timeStr);
+  },
+  (input: string): number => {
+    const match = input.match(`${d4}${_}${d2}${_}${d2}${_}${d2}${_}${d2}${_}${d2}`);
+    if (!match) {
+      return null;
+    }
+
+    const timeStr = match.slice(1, 7).join('');
+    return parseDate(timeStr);
   },
   (input: string): number => (/^\d+$/.test(input) ? +input : null),
 ];
