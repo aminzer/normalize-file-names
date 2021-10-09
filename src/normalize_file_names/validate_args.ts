@@ -1,7 +1,6 @@
 import { isDirExist } from '../utils';
-import { inputDirPath, outputDirPath } from './config';
 
-export default async function validateConfig(): Promise<void> {
+export default async function validateArgs({ inputDirPath, outputDirPath }): Promise<void> {
   if (!inputDirPath) {
     throw new Error('Input dir path not set');
   }
