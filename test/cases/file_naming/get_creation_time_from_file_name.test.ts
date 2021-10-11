@@ -1,11 +1,11 @@
 import { getCreationTimeFromFileName } from '../../../dist/file_naming';
 
-type Case = {
+type RecognizableCase = {
   input: string;
   output: string | number;
 };
 
-const recognizableCases: Case[] = [
+const recognizableCases: RecognizableCase[] = [
   '20010203040506',
   'IMG_20010203040506',
   'IMG_20010203040506_1',
