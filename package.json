@@ -1,6 +1,6 @@
 {
   "name": "@aminzer/normalize-file-names",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Utility for file name normalization",
   "license": "MIT",
   "author": "aminzer",
