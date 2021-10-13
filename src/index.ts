@@ -2,7 +2,6 @@ import { log } from './logger';
 import {
   inputDirPath,
   outputDirPath,
-  unrecognizedFilesOutputDirPath,
   fetchCreationTimeFromFsForUnrecognizedFiles,
   isDryRun,
 } from './config';
@@ -13,7 +12,6 @@ import normalizeFileNames from './normalize_file_names';
     await normalizeFileNames({
       inputDirPath,
       outputDirPath,
-      unrecognizedFilesOutputDirPath,
       fetchCreationTimeFromFsForUnrecognizedFiles,
       isDryRun,
     });

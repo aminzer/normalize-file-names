@@ -16,7 +16,8 @@
   },
   "ignorePatterns": [
     "dist/**/*",
-    "jest.config.js"
+    "jest.config.js",
+    "jest.setup.js"
   ],
   "rules": {
     "linebreak-style": "off"

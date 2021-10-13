@@ -16,15 +16,15 @@ import processFile from './process_file';
 export default async function normalizeFileNames({
   inputDirPath,
   outputDirPath,
-  unrecognizedFilesOutputDirPath,
-  fetchCreationTimeFromFsForUnrecognizedFiles,
-  isDryRun,
+  unrecognizedFilesOutputDirPath = path.join(outputDirPath || '', '_UNRECOGNIZED'),
+  fetchCreationTimeFromFsForUnrecognizedFiles = false,
+  isDryRun = false,
 }: {
   inputDirPath: string,
   outputDirPath: string,
-  unrecognizedFilesOutputDirPath: string,
-  fetchCreationTimeFromFsForUnrecognizedFiles: boolean,
-  isDryRun: boolean,
+  unrecognizedFilesOutputDirPath?: string,
+  fetchCreationTimeFromFsForUnrecognizedFiles?: boolean,
+  isDryRun?: boolean,
 }) {
   await validateArgs({ inputDirPath, outputDirPath });
 
