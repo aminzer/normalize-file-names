@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import getNonExistentFilePath from './get_non_existent_file_path';
 import isFileExist from './is_file_exist';
 

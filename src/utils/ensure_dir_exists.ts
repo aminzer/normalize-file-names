@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import isDirExist from './is_dir_exist';
 
 export default async function ensureDirExists(dirPath: string): Promise<void> {
