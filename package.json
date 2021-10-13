@@ -11,6 +11,7 @@
     "husky:prepare": "husky install",
     "lint": "eslint src/**/*.ts test/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
+    "start": "node .",
     "prepare": "run-s husky:prepare build",
     "test": "jest"
   },
