@@ -47,5 +47,5 @@ Arguments:
 - `FETCH_CREATION_TIME_FROM_FS_FOR_UNRECOGNIZED_FILES` (`boolean`, `false` by default) - when enabled creation time of files with unrecognized names is fetched from File System created time or modification time (`birthtime`/`mtime` accordingly).
 
 The arguments above can be set via one of the following methods:
-- System Environment Variables 
+- Setting corresponding system Environment Variables
 - Creating [.env file](https://www.npmjs.com/package/dotenv) in the root project directory
