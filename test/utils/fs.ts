@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax, no-await-in-loop, no-continue */
 import { promises as fs } from 'fs';
 import * as path from 'path';
 
@@ -11,7 +12,20 @@ export async function createFile(filePath: string): Promise<void> {
 }
 
 export async function deleteDir(dirPath: string): Promise<void> {
-  await fs.rmdir(dirPath, { recursive: true });
+  const childNames: string[] = await fs.readdir(dirPath);
+
+  for (const childName of childNames) {
+    const childPath = path.join(dirPath, childName);
+    const childStats = await fs.stat(childPath);
+
+    if (childStats.isDirectory()) {
+      await deleteDir(childPath);
+    } else {
+      await fs.unlink(childPath);
+    }
+  }
+
+  await fs.rmdir(dirPath);
 }
 
 async function getChildrenNames(
@@ -23,28 +37,25 @@ async function getChildrenNames(
     dirsOnly?: boolean;
   } = {},
 ): Promise<string[]> {
-  const names: string[] = await fs.readdir(dirPath);
-  const filteredNames: string[] = [];
+  const childNames: string[] = await fs.readdir(dirPath);
+  const filteredChildNames: string[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const name of names) {
-    // eslint-disable-next-line no-await-in-loop
-    const stats = await fs.stat(path.join(dirPath, name));
+  for (const childName of childNames) {
+    const childPath = path.join(dirPath, childName);
+    const childStats = await fs.stat(childPath);
 
-    if (filesOnly && !stats.isFile()) {
-      // eslint-disable-next-line no-continue
+    if (filesOnly && !childStats.isFile()) {
       continue;
     }
 
-    if (dirsOnly && !stats.isDirectory()) {
-      // eslint-disable-next-line no-continue
+    if (dirsOnly && !childStats.isDirectory()) {
       continue;
     }
 
-    filteredNames.push(name);
+    filteredChildNames.push(childName);
   }
 
-  return filteredNames;
+  return filteredChildNames;
 }
 
 export async function getDirNames(dirPath: string): Promise<string[]> {
