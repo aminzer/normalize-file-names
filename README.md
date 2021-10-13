@@ -41,7 +41,7 @@ npm start
 ```
 
 Arguments:
-- `INPUT_DIR_PATH` (`string`, required) - path to the input directory containing files to rename. Files from all nested sub-directories are processed too. Files from input directory are not renamed themselves - they are copied to the output directory.
+- `INPUT_DIR_PATH` (`string`, required) - path to the input directory containing files to rename. Files from all nested sub-directories are processed too. Files from input directory are not renamed themselves - they are copied to the output directory with new names.
 - `OUTPUT_DIR_PATH` (`string`, required) - path to the output directory where renamed files are copied to. All files are copied to the output directory root regardless of their location relative to the input directory. Files with unrecognized names are copied to the special output directory subfolder named `_UNRECOGNIZED`.
 - `IS_DRY_RUN` (`boolean`, `false` by default) - when enabled files are not copied to the output directory - their name changed are just logged to the console output. It can be used to check if the files can be recognized.
 - `FETCH_CREATION_TIME_FROM_FS_FOR_UNRECOGNIZED_FILES` (`boolean`, `false` by default) - when enabled creation time of files with unrecognized names is fetched from File System created time or modification time (`birthtime`/`mtime` accordingly).
