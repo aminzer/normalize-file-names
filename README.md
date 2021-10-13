@@ -1,6 +1,6 @@
 ### Overview
 
-[NodeJS](https://nodejs.org) utility for normalizing file names.
+[NodeJS](https://nodejs.org) utility for file name normalization.
 
 ### Usage scope
 

@@ -1,10 +1,29 @@
 {
-  "name": "normalize-file-names",
+  "name": "@aminzer/normalize-file-names",
   "version": "0.0.1",
-  "description": "",
+  "description": "Utility for file name normalization",
   "license": "MIT",
   "author": "aminzer",
+  "keywords": [
+    "normalize",
+    "normalization",
+    "file-name",
+    "file-naming",
+    "creation-date",
+    "creation-time"
+  ],
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aminzer/normalize-file-names.git"
+  },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "build:watch": "npm run build -- --watch",
