@@ -87,7 +87,11 @@ describe('normalizeFileNames', () => {
 
         await createDir(getResourcePath('input/sub_dir_2'));
         await createFile(getResourcePath('input/sub_dir_2/file_20030405_060708.txt'));
-        await createFile(getResourcePath('input/sub_dir_2/unrecognizable_file_b.txt'));
+
+        await sleep(50);
+
+        await createDir(getResourcePath('input/sub_dir_2/sub_dir_2_1'));
+        await createFile(getResourcePath('input/sub_dir_2/sub_dir_2_1/unrecognizable_file_b.txt'));
       });
 
       describe('when only required args are set', () => {
