@@ -7,7 +7,7 @@ export default function getCreationTimeFromFileName(fileName: string): number {
   for (let i = 0; i < timeParsers.length; i += 1) {
     const time = timeParsers[i](name);
 
-    if (time !== null) {
+    if (time !== null && Number.isFinite(time)) {
       return time;
     }
   }

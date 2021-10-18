@@ -1,11 +1,19 @@
 import { getCreationTimeFromFileName } from '../../../dist/file_naming';
 
-type RecognizableCase = {
+type Case = {
   input: string;
   output: string | number;
 };
 
-const recognizableCases: RecognizableCase[] = [
+const unrecognizableCases: Case[] = [
+  'no-time-here-123.jpg',
+  '200089800743_138740.jpg',
+].map((input) => ({
+  input,
+  output: null,
+}));
+
+const recognizableCases: Case[] = [
   '20010203040506',
   'IMG_20010203040506',
   'IMG_20010203040506_1',
@@ -33,10 +41,14 @@ recognizableCases.push({
 
 describe('getCreationTimeFromFileName', () => {
   describe("when file name doesn't contain recognizable time", () => {
-    it('returns null', () => {
-      const fileName = 'no-time-here-123.jpg';
+    unrecognizableCases.forEach(({ input }) => {
+      const fileName = `${input}.jpg`;
 
-      expect(getCreationTimeFromFileName(fileName)).toBe(null);
+      describe(`when file name is "${fileName}"`, () => {
+        it('returns null', () => {
+          expect(getCreationTimeFromFileName(fileName)).toBe(null);
+        });
+      });
     });
   });
 
