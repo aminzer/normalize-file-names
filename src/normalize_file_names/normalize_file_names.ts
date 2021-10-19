@@ -40,7 +40,7 @@ export default async function normalizeFileNames({
       }
 
       const processedFileCount = recognizedFileCount + unrecognizedFileCount;
-      const progressPercentage = Math.round(
+      const progressPercentage = Math.floor(
         100 * (totalFileCount > 0 ? processedFileCount / totalFileCount : 1),
       );
 
