@@ -37,6 +37,9 @@ const recognizableCases: Case[] = [
 recognizableCases.push({
   input: '1600000000000',
   output: new Date(1600000000000).valueOf(),
+}, {
+  input: 'IMG_2001_02_03_04_05_06_007',
+  output: '2001-02-03 04:05:06.007',
 });
 
 describe('getCreationTimeFromFileName', () => {
@@ -52,7 +55,7 @@ describe('getCreationTimeFromFileName', () => {
     });
   });
 
-  describe('when file name contains recognizable time', () => {
+  describe.only('when file name contains recognizable time', () => {
     recognizableCases.forEach(({ input, output }) => {
       const fileName = `${input}.jpg`;
 

@@ -1,6 +1,7 @@
 const digitsGroup = (length: number) => `(\\d{${length}})`;
 
 export const d2 = digitsGroup(2);
+export const d3 = digitsGroup(3);
 export const d4 = digitsGroup(4);
 export const d6 = digitsGroup(6);
 export const d8 = digitsGroup(8);
