@@ -20,7 +20,7 @@ describe('getNonExistentFilePath', () => {
       const filePath = getResourcePath('existing_file.txt');
 
       expect(await getNonExistentFilePath(filePath))
-        .toBe(getResourcePath('existing_file_1.txt'));
+        .toBe(getResourcePath('existing_file__1.txt'));
     });
   });
 
@@ -29,7 +29,7 @@ describe('getNonExistentFilePath', () => {
       const filePath = getResourcePath('existing_file_with_postfix.txt');
 
       expect(await getNonExistentFilePath(filePath))
-        .toBe(getResourcePath('existing_file_with_postfix_2.txt'));
+        .toBe(getResourcePath('existing_file_with_postfix__2.txt'));
     });
   });
 });

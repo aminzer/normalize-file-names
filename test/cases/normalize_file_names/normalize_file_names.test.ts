@@ -106,9 +106,9 @@ describe('normalizeFileNames', () => {
           const recognizedFileNames = await getFileNames(outputDirPath);
 
           expect(recognizedFileNames).toEqual([
-            '2001.02.03_04.05.06.000.txt',
-            '2002.03.04_05.06.07.000.txt',
-            '2003.04.05_06.07.08.000.txt',
+            '20010203_040506000.txt',
+            '20020304_050607000.txt',
+            '20030405_060708000.txt',
           ]);
         });
 
@@ -167,7 +167,7 @@ describe('normalizeFileNames', () => {
 
           const areAllFilesHaveExpectedNames = unrecognizedFileNames.every((fileName) => {
             const { name } = path.parse(fileName);
-            const date = parse(name, 'yyyy.MM.dd_HH.mm.ss.SSS', new Date(0));
+            const date = parse(name, 'yyyyMMdd_HHmmssSSS', new Date(0));
 
             return isValid(date);
           });
@@ -193,9 +193,9 @@ describe('normalizeFileNames', () => {
         const fileNames = await getFileNames(getResourcePath('output'));
 
         expect(fileNames).toEqual([
-          '2001.02.03_04.05.06.000.txt',
-          '2001.02.03_04.05.06.000_1.txt',
-          '2001.02.03_04.05.06.000_2.txt',
+          '20010203_040506000.txt',
+          '20010203_040506000__1.txt',
+          '20010203_040506000__2.txt',
         ]);
       });
     });

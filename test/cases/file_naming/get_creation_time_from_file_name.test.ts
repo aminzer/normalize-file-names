@@ -55,7 +55,7 @@ describe('getCreationTimeFromFileName', () => {
     });
   });
 
-  describe.only('when file name contains recognizable time', () => {
+  describe('when file name contains recognizable time', () => {
     recognizableCases.forEach(({ input, output }) => {
       const fileName = `${input}.jpg`;
 
