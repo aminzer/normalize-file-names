@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import getNonExistentFilePath from './get_non_existent_file_path';
+import getNonExistentFileVersionPath from './get_non_existent_file_version_path';
 import isFileExist from './is_file_exist';
 
 export default async function copyFile(
@@ -18,7 +18,7 @@ export default async function copyFile(
   }
 
   if (keepSeparateIfExists) {
-    const separateTargetFilePath = await getNonExistentFilePath(targetFilePath);
+    const separateTargetFilePath = await getNonExistentFileVersionPath(targetFilePath);
     await fs.copyFile(sourceFilePath, separateTargetFilePath);
     return;
   }

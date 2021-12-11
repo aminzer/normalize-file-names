@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-export default function getNextPossibleFilePath(filePath: string): string {
+export default function getNextFileVersionPath(filePath: string): string {
   const { dir, name, ext } = path.parse(filePath);
 
   const postfixMatch = name.match(/^(.+)__(\d+)$/);
