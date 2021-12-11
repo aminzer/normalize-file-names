@@ -1,5 +1,5 @@
 import * as path from 'path';
-import getNonExistentFileVersionPath from '../../../dist/utils/get_non_existent_file_path';
+import getNonExistentFileVersionPath from '../../../dist/utils/get_non_existent_file_version_path';
 
 function getResourcePath(fileName: string): string {
   return path.resolve(__dirname, '../../resources/get_non_existent_file_path', fileName);
