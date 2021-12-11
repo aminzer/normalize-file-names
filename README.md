@@ -21,7 +21,7 @@ Original file creation/modification timestamps might be lost in process of data 
 
 This utility can convert file names from different sources to the same format containing file creation date:
 ```
-2015.07.15_11.45.09.000.jpg
+20150715_114509000.jpg
 ```
 
 Thus sorting files by name also sorts them in chronological order.
