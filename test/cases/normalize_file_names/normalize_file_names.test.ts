@@ -199,5 +199,22 @@ describe('normalizeFileNames', () => {
         ]);
       });
     });
+
+    describe('when input dir contains recognizable files only', () => {
+      beforeEach(async () => {
+        await createFile(getResourcePath('input/file_20010203_040506.txt'));
+
+        await normalizeFileNames({
+          inputDirPath,
+          outputDirPath,
+        });
+      });
+
+      it("doesn't crete folder for unrecognized files", async () => {
+        const dirNames = await getDirNames(getResourcePath(outputDirPath));
+
+        expect(dirNames).toEqual([]);
+      });
+    });
   });
 });

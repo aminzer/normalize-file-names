@@ -2,7 +2,7 @@ import * as path from 'path';
 import { iterateDirectoryChildren } from '@aminzer/dir-diff';
 import { log, logSingleLine } from '../logger';
 import { getCreationTimeFromFileName, getOutputFileName } from '../file_naming';
-import { getCreationTimeFromFs, getFileCount } from '../utils';
+import { getCreationTimeFromFs, getFileCount, ensureDirExists } from '../utils';
 import processFile from './process_file';
 import prepareForProcessing from './prepare_for_processing';
 
@@ -25,7 +25,6 @@ export default async function normalizeFileNames({
     await prepareForProcessing({
       inputDirPath,
       outputDirPath,
-      unrecognizedFilesOutputDirPath,
       fetchCreationTimeFromFsForUnrecognizedFiles,
       isDryRun,
     });
@@ -33,6 +32,7 @@ export default async function normalizeFileNames({
     const totalFileCount = await getFileCount(inputDirPath);
     let recognizedFileCount = 0;
     let unrecognizedFileCount = 0;
+    let isUnrecognizedFilesOutputDirCreated = false;
 
     const logProgress = (): void => {
       if (isDryRun) {
@@ -64,6 +64,11 @@ export default async function normalizeFileNames({
           outputFilePath = path.join(outputDirPath, outputFileName);
           recognizedFileCount += 1;
         } else {
+          if (!isDryRun && !isUnrecognizedFilesOutputDirCreated) {
+            await ensureDirExists(unrecognizedFilesOutputDirPath);
+            isUnrecognizedFilesOutputDirCreated = true;
+          }
+
           let outputFileName = fsEntry.name;
 
           if (fetchCreationTimeFromFsForUnrecognizedFiles) {
