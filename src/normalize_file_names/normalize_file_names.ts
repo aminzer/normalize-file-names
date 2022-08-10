@@ -2,20 +2,22 @@ import * as path from 'path';
 import { iterateDirectoryChildren } from '@aminzer/dir-diff';
 import { log, logSingleLine } from '../logger';
 import { getCreationTimeFromFileName, getOutputFileName } from '../file_naming';
-import { getCreationTimeFromFs, getFileCount, ensureDirExists } from '../utils';
+import { getCreationTimeFromFs, getFileCount, ensureDirExistsCached } from '../utils';
 import processFile from './process_file';
 import prepareForProcessing from './prepare_for_processing';
 
 export default async function normalizeFileNames({
   inputDirPath,
   outputDirPath,
-  unrecognizedFilesOutputDirPath = path.join(outputDirPath || '', '_UNRECOGNIZED'),
+  unrecognizedFilesOutputDirPath = path.join((outputDirPath ?? ''), '_UNRECOGNIZED'),
+  recognizedFromFsFilesOutputDirPath = path.join((outputDirPath ?? ''), '_RECOGNIZED_FROM_FS'),
   fetchCreationTimeFromFsForUnrecognizedFiles = false,
   isDryRun = false,
 }: {
   inputDirPath: string,
   outputDirPath: string,
   unrecognizedFilesOutputDirPath?: string,
+  recognizedFromFsFilesOutputDirPath?: string,
   fetchCreationTimeFromFsForUnrecognizedFiles?: boolean,
   isDryRun?: boolean,
 }) {
@@ -32,7 +34,14 @@ export default async function normalizeFileNames({
     const totalFileCount = await getFileCount(inputDirPath);
     let recognizedFileCount = 0;
     let unrecognizedFileCount = 0;
-    let isUnrecognizedFilesOutputDirCreated = false;
+
+    const ensureUnrecognizedFilesOutputDirCreated = ensureDirExistsCached(
+      unrecognizedFilesOutputDirPath,
+    );
+
+    const ensureRecognizedFromFsFilesOutputDirCreated = ensureDirExistsCached(
+      recognizedFromFsFilesOutputDirPath,
+    );
 
     const logProgress = (): void => {
       if (isDryRun) {
@@ -55,30 +64,39 @@ export default async function normalizeFileNames({
           return;
         }
 
-        let outputFilePath;
+        let outputFileDirPath: string;
+        let outputFileName: string;
+
         const creationTimeFromFileName = getCreationTimeFromFileName(fsEntry.name);
 
         if (creationTimeFromFileName !== null) {
-          const outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFileName);
+          outputFileDirPath = outputDirPath;
+          outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFileName);
 
-          outputFilePath = path.join(outputDirPath, outputFileName);
           recognizedFileCount += 1;
+        } else if (fetchCreationTimeFromFsForUnrecognizedFiles) {
+          if (!isDryRun) {
+            await ensureRecognizedFromFsFilesOutputDirCreated();
+          }
+
+          const creationTimeFromFs = await getCreationTimeFromFs(fsEntry.absolutePath);
+
+          outputFileDirPath = recognizedFromFsFilesOutputDirPath;
+          outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs);
+
+          unrecognizedFileCount += 1;
         } else {
-          if (!isDryRun && !isUnrecognizedFilesOutputDirCreated) {
-            await ensureDirExists(unrecognizedFilesOutputDirPath);
-            isUnrecognizedFilesOutputDirCreated = true;
+          if (!isDryRun) {
+            await ensureUnrecognizedFilesOutputDirCreated();
           }
 
-          let outputFileName = fsEntry.name;
+          outputFileDirPath = unrecognizedFilesOutputDirPath;
+          outputFileName = fsEntry.name;
 
-          if (fetchCreationTimeFromFsForUnrecognizedFiles) {
-            const creationTimeFromFs = await getCreationTimeFromFs(fsEntry.absolutePath);
-            outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs);
-          }
-
-          outputFilePath = path.join(unrecognizedFilesOutputDirPath, outputFileName);
           unrecognizedFileCount += 1;
         }
+
+        const outputFilePath = path.join(outputFileDirPath, outputFileName);
 
         await processFile({
           inputFilePath: fsEntry.absolutePath,

@@ -163,7 +163,7 @@ describe('normalizeFileNames', () => {
         });
 
         it('moves unrecognized files to separate directory with names fetched from file stats', async () => {
-          const unrecognizedFileNames = await getFileNames(getResourcePath('output/_UNRECOGNIZED'));
+          const unrecognizedFileNames = await getFileNames(getResourcePath('output/_RECOGNIZED_FROM_FS'));
 
           const areAllFilesHaveExpectedNames = unrecognizedFileNames.every((fileName) => {
             const { name } = path.parse(fileName);
