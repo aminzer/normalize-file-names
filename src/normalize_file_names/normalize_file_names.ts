@@ -31,9 +31,12 @@ export default async function normalizeFileNames({
       isDryRun,
     });
 
-    const totalFileCount = await getFileCount(inputDirPath);
-    let recognizedFileCount = 0;
-    let unrecognizedFileCount = 0;
+    const fileCount = {
+      total: await getFileCount(inputDirPath),
+      recognizedFromName: 0,
+      recognizedFromFs: 0,
+      unrecognized: 0,
+    };
 
     const ensureUnrecognizedFilesOutputDirCreated = ensureDirExistsCached(
       unrecognizedFilesOutputDirPath,
@@ -48,12 +51,17 @@ export default async function normalizeFileNames({
         return;
       }
 
-      const processedFileCount = recognizedFileCount + unrecognizedFileCount;
+      const {
+        total, recognizedFromName, recognizedFromFs, unrecognized,
+      } = fileCount;
+
+      const processed = recognizedFromName + recognizedFromFs + unrecognized;
+
       const progressPercentage = Math.floor(
-        100 * (totalFileCount > 0 ? processedFileCount / totalFileCount : 1),
+        100 * (total > 0 ? processed / total : 1),
       );
 
-      logSingleLine(`Processed files: ${processedFileCount}/${totalFileCount} (${progressPercentage}%)`);
+      logSingleLine(`Processed files: ${processed}/${total} (${progressPercentage}%)`);
     };
 
     loggingIntervalId = setInterval(logProgress, 200);
@@ -73,7 +81,7 @@ export default async function normalizeFileNames({
           outputFileDirPath = outputDirPath;
           outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFileName);
 
-          recognizedFileCount += 1;
+          fileCount.recognizedFromName += 1;
         } else if (fetchCreationTimeFromFsForUnrecognizedFiles) {
           if (!isDryRun) {
             await ensureRecognizedFromFsFilesOutputDirCreated();
@@ -84,7 +92,7 @@ export default async function normalizeFileNames({
           outputFileDirPath = recognizedFromFsFilesOutputDirPath;
           outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs);
 
-          unrecognizedFileCount += 1;
+          fileCount.recognizedFromFs += 1;
         } else {
           if (!isDryRun) {
             await ensureUnrecognizedFilesOutputDirCreated();
@@ -93,7 +101,7 @@ export default async function normalizeFileNames({
           outputFileDirPath = unrecognizedFilesOutputDirPath;
           outputFileName = fsEntry.name;
 
-          unrecognizedFileCount += 1;
+          fileCount.unrecognized += 1;
         }
 
         const outputFilePath = path.join(outputFileDirPath, outputFileName);
@@ -112,8 +120,12 @@ export default async function normalizeFileNames({
 
     logProgress();
     log();
-    log(`Recognized files: ${recognizedFileCount}`);
-    log(`Unrecognized files: ${unrecognizedFileCount}`);
+    log(`Recognized files (from name): ${fileCount.recognizedFromName}`);
+    if (fetchCreationTimeFromFsForUnrecognizedFiles) {
+      log(`Recognized files (from FS timestamps): ${fileCount.recognizedFromName}`);
+    } else {
+      log(`Unrecognized files: ${fileCount.unrecognized}`);
+    }
   } finally {
     if (loggingIntervalId) {
       clearInterval(loggingIntervalId);
