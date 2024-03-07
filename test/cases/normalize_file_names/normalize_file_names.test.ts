@@ -81,6 +81,7 @@ describe('normalizeFileNames', () => {
 
         await createDir(getResourcePath('input/sub_dir_1'));
         await createFile(getResourcePath('input/sub_dir_1/file_20020304_050607.txt'));
+        await createFile(getResourcePath('input/sub_dir_1/2021.12.26.txt'));
         await createFile(getResourcePath('input/sub_dir_1/unrecognizable_file_a.txt'));
 
         await sleep(50);
@@ -109,6 +110,7 @@ describe('normalizeFileNames', () => {
             '20010203_040506000.txt',
             '20020304_050607000.txt',
             '20030405_060708000.txt',
+            '20211226_000000000.txt',
           ]);
         });
 
