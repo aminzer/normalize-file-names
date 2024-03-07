@@ -42,6 +42,18 @@ recognizableCases.push({
   output: '2001-02-03 04:05:06.007',
 });
 
+recognizableCases.push(
+  ...[
+    '2001 02 03',
+    '2001.02.03',
+    '2001_02_03',
+    '2001-02-03',
+  ].map((input) => ({
+    input,
+    output: '2001-02-03 00:00:00',
+  })),
+);
+
 describe('getCreationTimeFromFileName', () => {
   describe("when file name doesn't contain recognizable time", () => {
     unrecognizableCases.forEach(({ input }) => {

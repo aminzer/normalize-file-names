@@ -33,6 +33,15 @@ const timeParsers: TimeParser[] = [
     return parseDate(timeStr);
   },
   (input: string): number => {
+    const match = input.match(`${d4}${_}${d2}${_}${d2}`);
+    if (!match) {
+      return null;
+    }
+
+    const timeStr = match.slice(1, 4).join('');
+    return parseDate(timeStr, 'yyyyMMdd');
+  },
+  (input: string): number => {
     const match = input.match(d14);
     return match ? parseDate(match[1]) : null;
   },
