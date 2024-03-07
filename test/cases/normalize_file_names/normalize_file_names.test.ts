@@ -3,7 +3,7 @@ import { parse, isValid } from 'date-fns';
 import {
   createDir, createFile, deleteDir, getDirNames, getFileNames, sleep,
 } from '../../utils';
-import normalizeFileNames from '../../../dist/normalize_file_names';
+import normalizeFileNames from '../../../src/normalize_file_names';
 
 function getResourcePath(fileName: string): string {
   return path.resolve(__dirname, '../../resources/normalize_file_names', fileName);

@@ -1,4 +1,4 @@
-import { getCreationTimeFromFileName } from '../../../dist/file_naming';
+import { getCreationTimeFromFileName } from '../../../src/file_naming';
 
 type Case = {
   input: string;

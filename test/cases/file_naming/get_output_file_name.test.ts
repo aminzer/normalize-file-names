@@ -1,4 +1,4 @@
-import { getOutputFileName } from '../../../dist/file_naming';
+import { getOutputFileName } from '../../../src/file_naming';
 
 const creationTime = new Date('2001-02-03 04:05:06').valueOf();
 const formattedCreationTime = '20010203_040506000';
