@@ -29,18 +29,11 @@ const recognizableCases: Case[] = [
   'IMG 2001 02 03 04 05 06',
   'IMG-2001.02.03-04.05.06',
   'some-text-here-2001-02-03-04-05-06',
+  '20010203_040506',
 ].map((input) => ({
   input,
   output: '2001-02-03 04:05:06',
 }));
-
-recognizableCases.push({
-  input: '1600000000000',
-  output: new Date(1600000000000).valueOf(),
-}, {
-  input: 'IMG_2001_02_03_04_05_06_007',
-  output: '2001-02-03 04:05:06.007',
-});
 
 recognizableCases.push(
   ...[
@@ -53,6 +46,20 @@ recognizableCases.push(
     output: '2001-02-03 00:00:00',
   })),
 );
+
+recognizableCases.push({
+  input: '1600000000000',
+  output: new Date(1600000000000).valueOf(),
+}, {
+  input: 'IMG_2001_02_03_04_05_06_007',
+  output: '2001-02-03 04:05:06.007',
+}, {
+  input: '2021.12.26',
+  output: '2021.12.26 00:00:00',
+}, {
+  input: '20220417_200000',
+  output: '2022.04.17 20:00:00',
+});
 
 describe('getCreationTimeFromFileName', () => {
   describe("when file name doesn't contain recognizable time", () => {
