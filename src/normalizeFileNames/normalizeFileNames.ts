@@ -1,12 +1,11 @@
 import { join } from 'node:path';
 import { traverseDirectory } from '@aminzer/traverse-directory';
-import { getCreationTimeFromFileName } from '../fileNaming/index.js';
-import { LoggerInterface } from '../logging/index.js';
 import {
-  getCreationTimeFromFs,
-  getFileCount,
-  createDirectoryIfNotExistsCached,
-} from '../utils/index.js';
+  getCreationTimeFromFileName,
+  getCreationTimeFromFileSystem,
+} from '../fileCreationTimeParsing/index.js';
+import { LoggerInterface } from '../logging/index.js';
+import { getFileCount, createDirectoryIfNotExistsCached } from '../utils/index.js';
 import { getOutputFileName, processFile } from './fileProcessing/index.js';
 import { logParameters, validateParameters } from './parameters/index.js';
 
@@ -92,10 +91,10 @@ const normalizeFileNames = async ({
             await ensureRecognizedFromFsFilesOutputDirCreated();
           }
 
-          const creationTimeFromFs = await getCreationTimeFromFs(fsEntry.absolutePath);
+          const creationTimeFromFs = await getCreationTimeFromFileSystem(fsEntry.absolutePath);
 
           outputFileDirPath = recognizedFromFsFilesOutputDirPath;
-          outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs);
+          outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs!);
 
           fileCount.recognizedFromFs += 1;
         } else {

@@ -57,7 +57,12 @@ recognizableCases.push(
 
 describe('getCreationTimeFromFileName', () => {
   describe("when file name doesn't contain recognizable time", () => {
-    const unrecognizableFilenames = ['no-time-here-123.jpg', '200089800743_138740.jpg'];
+    const unrecognizableFilenames = [
+      'no-time-here-123.jpg',
+      '200089800743_138740.jpg',
+      'random_name',
+      'IMG_abcdefghijk.jpg',
+    ];
 
     unrecognizableFilenames.forEach((fileName) => {
       describe(`when file name is "${fileName}"`, () => {
