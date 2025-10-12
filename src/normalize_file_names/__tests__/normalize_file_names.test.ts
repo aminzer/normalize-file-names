@@ -1,12 +1,19 @@
-import * as path from 'path';
+import assert from 'node:assert';
+import { join, parse as parseFs, resolve } from 'node:path';
+import { afterEach, beforeEach, describe, it } from 'node:test';
 import { parse, isValid } from 'date-fns';
 import {
-  createDir, createFile, deleteDir, getDirNames, getFileNames, sleep,
-} from '../../utils';
-import normalizeFileNames from '../../../src/normalize_file_names';
+  createDir,
+  createFile,
+  deleteDir,
+  getDirNames,
+  getFileNames,
+  sleep,
+} from './utils/index.js';
+import normalizeFileNames from '../normalize_file_names.js';
 
-function getResourcePath(fileName: string): string {
-  return path.resolve(__dirname, '../../resources/normalize_file_names', fileName);
+function getResourcePath(name: string): string {
+  return resolve(import.meta.dirname, '../../../test/resources/normalize_file_names', name);
 }
 
 describe('normalizeFileNames', () => {
@@ -25,49 +32,37 @@ describe('normalizeFileNames', () => {
 
   describe('when "inputDirPath" isn\'t set', () => {
     it('rejects with error', async () => {
-      await expect(normalizeFileNames({
-        inputDirPath: undefined as any,
-        outputDirPath,
-      }))
-        .rejects
-        .toThrow('Input dir path not set');
+      await assert.rejects(() => normalizeFileNames({ inputDirPath: '', outputDirPath }), {
+        message: 'Input dir path not set',
+      });
     });
   });
 
   describe('when "inputDirPath" doesn\'t exist', () => {
-    const invalidPath = path.join(__dirname, 'invalid/path');
+    const invalidPath = join(import.meta.dirname, 'invalid/path');
 
     it('rejects with error', async () => {
-      await expect(normalizeFileNames({
-        inputDirPath: invalidPath,
-        outputDirPath,
-      }))
-        .rejects
-        .toThrow(`Input dir path "${invalidPath}" doesn't exist`);
+      await assert.rejects(() => normalizeFileNames({ inputDirPath: invalidPath, outputDirPath }), {
+        message: `Input dir path "${invalidPath}" doesn't exist`,
+      });
     });
   });
 
   describe('when "outputDirPath" isn\'t set', () => {
     it('rejects with error', async () => {
-      await expect(normalizeFileNames({
-        inputDirPath,
-        outputDirPath: undefined as any,
-      }))
-        .rejects
-        .toThrow('Output dir path not set');
+      await assert.rejects(() => normalizeFileNames({ inputDirPath, outputDirPath: '' }), {
+        message: 'Output dir path not set',
+      });
     });
   });
 
   describe('when "outputDirPath" doesn\'t exist', () => {
-    const invalidPath = path.join(__dirname, 'invalid/path');
+    const invalidPath = join(import.meta.dirname, 'invalid/path');
 
     it('rejects with error', async () => {
-      await expect(normalizeFileNames({
-        inputDirPath,
-        outputDirPath: invalidPath,
-      }))
-        .rejects
-        .toThrow(`Output dir path "${invalidPath}" doesn't exist`);
+      await assert.rejects(() => normalizeFileNames({ inputDirPath, outputDirPath: invalidPath }), {
+        message: `Output dir path "${invalidPath}" doesn't exist`,
+      });
     });
   });
 
@@ -97,16 +92,13 @@ describe('normalizeFileNames', () => {
 
       describe('when only required args are set', () => {
         beforeEach(async () => {
-          await normalizeFileNames({
-            inputDirPath,
-            outputDirPath,
-          });
+          await normalizeFileNames({ inputDirPath, outputDirPath });
         });
 
         it('copies all recognized files into output directory with normalized names', async () => {
           const recognizedFileNames = await getFileNames(outputDirPath);
 
-          expect(recognizedFileNames).toEqual([
+          assert.deepStrictEqual(recognizedFileNames, [
             '20010203_040506000.txt',
             '20020304_050607000.txt',
             '20030405_060708000.txt',
@@ -117,15 +109,13 @@ describe('normalizeFileNames', () => {
         it('creates separate directory for unrecognized files', async () => {
           const dirNames = await getDirNames(getResourcePath(outputDirPath));
 
-          expect(dirNames).toEqual([
-            '_UNRECOGNIZED',
-          ]);
+          assert.deepStrictEqual(dirNames, ['_UNRECOGNIZED']);
         });
 
-        it('moves unrecognized files to separate directory with original names', async () => {
+        it('copies unrecognized files to separate directory with original names', async () => {
           const unrecognizedFileNames = await getFileNames(getResourcePath('output/_UNRECOGNIZED'));
 
-          expect(unrecognizedFileNames).toEqual([
+          assert.deepStrictEqual(unrecognizedFileNames, [
             'unrecognizable_file.txt',
             'unrecognizable_file_a.txt',
             'unrecognizable_file_b.txt',
@@ -145,13 +135,13 @@ describe('normalizeFileNames', () => {
         it("doesn't copy files to the output directory", async () => {
           const recognizedFileNames = await getFileNames(outputDirPath);
 
-          expect(recognizedFileNames).toEqual([]);
+          assert.deepStrictEqual(recognizedFileNames, []);
         });
 
         it("doesn't creates separate directory for unrecognized files", async () => {
           const dirNames = await getDirNames(getResourcePath(outputDirPath));
 
-          expect(dirNames).toEqual([]);
+          assert.deepStrictEqual(dirNames, []);
         });
       });
 
@@ -165,16 +155,18 @@ describe('normalizeFileNames', () => {
         });
 
         it('moves unrecognized files to separate directory with names fetched from file stats', async () => {
-          const unrecognizedFileNames = await getFileNames(getResourcePath('output/_RECOGNIZED_FROM_FS'));
+          const unrecognizedFileNames = await getFileNames(
+            getResourcePath('output/_RECOGNIZED_FROM_FS'),
+          );
 
           const areAllFilesHaveExpectedNames = unrecognizedFileNames.every((fileName) => {
-            const { name } = path.parse(fileName);
+            const { name } = parseFs(fileName);
             const date = parse(name, 'yyyyMMdd_HHmmssSSS', new Date(0));
 
             return isValid(date);
           });
 
-          expect(areAllFilesHaveExpectedNames).toBe(true);
+          assert.strictEqual(areAllFilesHaveExpectedNames, true);
         });
       });
     });
@@ -185,16 +177,13 @@ describe('normalizeFileNames', () => {
         await createFile(getResourcePath('input/file-20010203-040506.txt'));
         await createFile(getResourcePath('input/file_2001_02_03-04_05_06.txt'));
 
-        await normalizeFileNames({
-          inputDirPath,
-          outputDirPath,
-        });
+        await normalizeFileNames({ inputDirPath, outputDirPath });
       });
 
       it('copies these files with the same creation time but different postfixes', async () => {
         const fileNames = await getFileNames(getResourcePath('output'));
 
-        expect(fileNames).toEqual([
+        assert.deepStrictEqual(fileNames, [
           '20010203_040506000.txt',
           '20010203_040506000__1.txt',
           '20010203_040506000__2.txt',
@@ -206,16 +195,13 @@ describe('normalizeFileNames', () => {
       beforeEach(async () => {
         await createFile(getResourcePath('input/file_20010203_040506.txt'));
 
-        await normalizeFileNames({
-          inputDirPath,
-          outputDirPath,
-        });
+        await normalizeFileNames({ inputDirPath, outputDirPath });
       });
 
       it("doesn't crete folder for unrecognized files", async () => {
         const dirNames = await getDirNames(getResourcePath(outputDirPath));
 
-        expect(dirNames).toEqual([]);
+        assert.deepStrictEqual(dirNames, []);
       });
     });
   });

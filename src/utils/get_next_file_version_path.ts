@@ -1,12 +1,12 @@
-import * as path from 'path';
+import { join, parse } from 'node:path';
 
 export default function getNextFileVersionPath(filePath: string): string {
-  const { dir, name, ext } = path.parse(filePath);
+  const { dir, name, ext } = parse(filePath);
 
   const postfixMatch = name.match(/^(.+)__(\d+)$/);
 
   const baseName = postfixMatch ? postfixMatch[1] : name;
-  const postfix = postfixMatch ? (+postfixMatch[2] + 1) : 1;
+  const postfix = postfixMatch ? +postfixMatch[2] + 1 : 1;
 
-  return path.join(dir, `${baseName}__${postfix}${ext}`);
+  return join(dir, `${baseName}__${postfix}${ext}`);
 }

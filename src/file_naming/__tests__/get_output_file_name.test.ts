@@ -1,4 +1,6 @@
-import { getOutputFileName } from '../../../src/file_naming';
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
+import getOutputFileName from '../get_output_file_name.js';
 
 const creationTime = new Date('2001-02-03 04:05:06').valueOf();
 const formattedCreationTime = '20010203_040506000';
@@ -9,7 +11,7 @@ describe('getOutputFileName', () => {
       const fileName = 'test';
       const expectedFileName = formattedCreationTime;
 
-      expect(getOutputFileName(fileName, creationTime)).toBe(expectedFileName);
+      assert.strictEqual(getOutputFileName(fileName, creationTime), expectedFileName);
     });
   });
 
@@ -18,7 +20,7 @@ describe('getOutputFileName', () => {
       const fileName = 'test.jpg';
       const expectedFileName = `${formattedCreationTime}.jpg`;
 
-      expect(getOutputFileName(fileName, creationTime)).toBe(expectedFileName);
+      assert.strictEqual(getOutputFileName(fileName, creationTime), expectedFileName);
     });
   });
 
@@ -27,7 +29,7 @@ describe('getOutputFileName', () => {
       const fileName = 'test.JPG';
       const expectedFileName = `${formattedCreationTime}.jpg`;
 
-      expect(getOutputFileName(fileName, creationTime)).toBe(expectedFileName);
+      assert.strictEqual(getOutputFileName(fileName, creationTime), expectedFileName);
     });
   });
 });

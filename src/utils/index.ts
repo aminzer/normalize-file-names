@@ -1,6 +1,5 @@
-export { default as copyFile } from './copy_file';
-export { default as ensureDirExists } from './ensure_dir_exists';
-export { default as ensureDirExistsCached } from './ensure_dir_exists_cached';
-export { default as getCreationTimeFromFs } from './get_creation_time_from_fs';
-export { default as getFileCount } from './get_file_count';
-export { default as isDirExist } from './is_dir_exist';
+export { default as copyFile } from './copy_file.js';
+export { default as createDirectoryIfNotExists } from './create_directory_if_not_exists.js';
+export { default as createDirectoryIfNotExistsCached } from './create_directory_if_not_exists_cached.js';
+export { default as getCreationTimeFromFs } from './get_creation_time_from_fs.js';
+export { default as getFileCount } from './get_file_count.js';

@@ -1,25 +1,26 @@
-import { promises as fs } from 'fs';
-import getNonExistentFileVersionPath from './get_non_existent_file_version_path';
-import isFileExist from './is_file_exist';
+import { copyFile as copyFileFs } from 'node:fs/promises';
+import getNonExistentFileVersionPath from './get_non_existent_file_version_path.js';
+import isFileExist from './is_file_exist.js';
 
 export default async function copyFile(
   sourceFilePath: string,
-  targetFilePath: string, {
+  targetFilePath: string,
+  {
     overwriteIfExists = false,
     keepSeparateIfExists = false,
   }: {
-    overwriteIfExists?: boolean,
-    keepSeparateIfExists?: boolean,
+    overwriteIfExists?: boolean;
+    keepSeparateIfExists?: boolean;
   } = {},
 ): Promise<void> {
   if (!isFileExist(targetFilePath) || overwriteIfExists) {
-    await fs.copyFile(sourceFilePath, targetFilePath);
+    await copyFileFs(sourceFilePath, targetFilePath);
     return;
   }
 
   if (keepSeparateIfExists) {
     const separateTargetFilePath = await getNonExistentFileVersionPath(targetFilePath);
-    await fs.copyFile(sourceFilePath, separateTargetFilePath);
+    await copyFileFs(sourceFilePath, separateTargetFilePath);
     return;
   }
 

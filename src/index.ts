@@ -1,11 +1,11 @@
-import { log } from './logger';
+import { log } from './logger/index.js';
 import {
   inputDirPath,
   outputDirPath,
   fetchCreationTimeFromFsForUnrecognizedFiles,
   isDryRun,
-} from './config';
-import normalizeFileNames from './normalize_file_names';
+} from './config/index.js';
+import normalizeFileNames from './normalize_file_names/index.js';
 
 (async () => {
   try {

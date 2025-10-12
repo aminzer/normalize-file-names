@@ -1,18 +1,12 @@
-import * as dotenv from 'dotenv';
+import { config } from 'dotenv';
 
-dotenv.config();
+config();
 
-const {
-  INPUT_DIR_PATH,
-  OUTPUT_DIR_PATH,
-  IS_DRY_RUN,
-  FETCH_CREATION_TIME_FROM_FS_FOR_UNRECOGNIZED_FILES,
-} = process.env;
+export const inputDirPath = process.env.INPUT_DIR_PATH ?? '';
 
-export const inputDirPath = INPUT_DIR_PATH;
+export const outputDirPath = process.env.OUTPUT_DIR_PATH ?? '';
 
-export const outputDirPath = OUTPUT_DIR_PATH;
+export const isDryRun = process.env.IS_DRY_RUN === 'true';
 
-export const isDryRun = IS_DRY_RUN === 'true';
-
-export const fetchCreationTimeFromFsForUnrecognizedFiles = FETCH_CREATION_TIME_FROM_FS_FOR_UNRECOGNIZED_FILES === 'true';
+export const fetchCreationTimeFromFsForUnrecognizedFiles =
+  process.env.FETCH_CREATION_TIME_FROM_FS_FOR_UNRECOGNIZED_FILES === 'true';

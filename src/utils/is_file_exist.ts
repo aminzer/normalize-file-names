@@ -1,10 +1,10 @@
-import { promises as fs } from 'fs';
+import { stat } from 'node:fs/promises';
 
 export default async function isFileExist(filePath: string): Promise<boolean> {
   try {
-    const stats = await fs.stat(filePath);
+    const stats = await stat(filePath);
     return stats.isFile();
-  } catch (err) {
+  } catch {
     return false;
   }
 }

@@ -1,5 +1,5 @@
-import { log } from '../logger';
-import validateArgs from './validate_args';
+import { directoryExists } from '@aminzer/traverse-directory';
+import { log } from '../logger/index.js';
 
 export default async function prepareForProcessing({
   inputDirPath,
@@ -7,12 +7,26 @@ export default async function prepareForProcessing({
   fetchCreationTimeFromFsForUnrecognizedFiles = false,
   isDryRun = false,
 }: {
-  inputDirPath: string,
-  outputDirPath: string,
-  fetchCreationTimeFromFsForUnrecognizedFiles: boolean,
-  isDryRun: boolean,
-}):Promise<void> {
-  await validateArgs({ inputDirPath, outputDirPath });
+  inputDirPath: string;
+  outputDirPath: string;
+  fetchCreationTimeFromFsForUnrecognizedFiles: boolean;
+  isDryRun: boolean;
+}): Promise<void> {
+  if (!inputDirPath) {
+    throw new Error('Input dir path not set');
+  }
+
+  if (!(await directoryExists(inputDirPath))) {
+    throw new Error(`Input dir path "${inputDirPath}" doesn't exist`);
+  }
+
+  if (!outputDirPath) {
+    throw new Error('Output dir path not set');
+  }
+
+  if (!(await directoryExists(outputDirPath))) {
+    throw new Error(`Output dir path "${outputDirPath}" doesn't exist`);
+  }
 
   log(`Input dir: "${inputDirPath}"`);
   log(`Output dir: "${outputDirPath}"`);

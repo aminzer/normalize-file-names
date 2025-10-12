@@ -1,35 +1,35 @@
-/* eslint-disable no-restricted-syntax, no-await-in-loop, no-continue */
-import { promises as fs } from 'fs';
-import * as path from 'path';
+import { mkdir, open, readdir, rmdir, stat, unlink } from 'node:fs/promises';
+import { join } from 'node:path';
 
 export async function createDir(dirPath: string): Promise<void> {
-  await fs.mkdir(dirPath);
+  await mkdir(dirPath);
 }
 
 export async function createFile(filePath: string): Promise<void> {
-  const fileHandle = await fs.open(filePath, 'w');
+  const fileHandle = await open(filePath, 'w');
   await fileHandle.close();
 }
 
 export async function deleteDir(dirPath: string): Promise<void> {
-  const childNames: string[] = await fs.readdir(dirPath);
+  const childNames: string[] = await readdir(dirPath);
 
   for (const childName of childNames) {
-    const childPath = path.join(dirPath, childName);
-    const childStats = await fs.stat(childPath);
+    const childPath = join(dirPath, childName);
+    const childStats = await stat(childPath);
 
     if (childStats.isDirectory()) {
       await deleteDir(childPath);
     } else {
-      await fs.unlink(childPath);
+      await unlink(childPath);
     }
   }
 
-  await fs.rmdir(dirPath);
+  await rmdir(dirPath);
 }
 
 async function getChildrenNames(
-  dirPath: string, {
+  dirPath: string,
+  {
     filesOnly = false,
     dirsOnly = false,
   }: {
@@ -37,12 +37,12 @@ async function getChildrenNames(
     dirsOnly?: boolean;
   } = {},
 ): Promise<string[]> {
-  const childNames: string[] = await fs.readdir(dirPath);
+  const childNames: string[] = await readdir(dirPath);
   const filteredChildNames: string[] = [];
 
   for (const childName of childNames) {
-    const childPath = path.join(dirPath, childName);
-    const childStats = await fs.stat(childPath);
+    const childPath = join(dirPath, childName);
+    const childStats = await stat(childPath);
 
     if (filesOnly && !childStats.isFile()) {
       continue;

@@ -2,6 +2,10 @@
   "name": "@aminzer/normalize-file-names",
   "version": "1.2.0",
   "description": "Utility for file name normalization",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
   "keywords": [
     "normalize",
     "normalization",
@@ -24,36 +28,36 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "build:watch": "npm run build -- --watch",
+    "clean": "rimraf dist",
     "codestyle": "run-p lint typescript:check",
-    "lint": "eslint src/**/*.ts test/**/*.ts",
+    "lint": "eslint src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
-    "start": "node .",
-    "prepare": "npm run build",
-    "test": "jest",
+    "prepare": "npm run rebuild",
+    "rebuild": "run-s clean build",
+    "test": "tsx --test src/**/*.test.ts",
     "typescript:check": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@aminzer/dir-diff": "^4.0.9",
-    "date-fns": "^2.25.0",
-    "dotenv": "^10.0.0",
+    "@aminzer/traverse-directory": "^1.2.0",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
     "single-line-log": "^1.1.2"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.9.1",
-    "@typescript-eslint/eslint-plugin": "^4.31.1",
-    "@typescript-eslint/parser": "^4.31.1",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-airbnb-typescript": "^14.0.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-jest": "^24.4.0",
-    "jest": "^27.2.0",
+    "@eslint/js": "^9.36.0",
+    "@types/node": "^24.5.2",
+    "@types/single-line-log": "^1.1.2",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "npm-run-all": "^4.1.5",
-    "ts-jest": "^27.0.5",
-    "typescript": "^4.4.3"
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.1"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=22.0.0"
   }
 }

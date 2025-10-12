@@ -1,8 +1,8 @@
-import * as path from 'path';
-import timeParsers from '../time_parsers';
+import { parse } from 'node:path';
+import timeParsers from '../time_parsers/index.js';
 
-export default function getCreationTimeFromFileName(fileName: string): number {
-  const { name } = path.parse(fileName);
+export default function getCreationTimeFromFileName(fileName: string): number | null {
+  const { name } = parse(fileName);
 
   for (let i = 0; i < timeParsers.length; i += 1) {
     const time = timeParsers[i](name);

@@ -1,3 +1,3 @@
 export type TimeParser = {
-  (input: string): number;
+  (input: string): number | null;
 };

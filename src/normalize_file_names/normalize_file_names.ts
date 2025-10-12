@@ -1,25 +1,29 @@
-import * as path from 'path';
-import { iterateDirectoryChildren } from '@aminzer/dir-diff';
-import { log, logSingleLine } from '../logger';
-import { getCreationTimeFromFileName, getOutputFileName } from '../file_naming';
-import { getCreationTimeFromFs, getFileCount, ensureDirExistsCached } from '../utils';
-import processFile from './process_file';
-import prepareForProcessing from './prepare_for_processing';
+import { join } from 'node:path';
+import { traverseDirectory } from '@aminzer/traverse-directory';
+import { log, logSingleLine } from '../logger/index.js';
+import { getCreationTimeFromFileName, getOutputFileName } from '../file_naming/index.js';
+import {
+  getCreationTimeFromFs,
+  getFileCount,
+  createDirectoryIfNotExistsCached,
+} from '../utils/index.js';
+import processFile from './process_file.js';
+import prepareForProcessing from './prepare_for_processing.js';
 
 export default async function normalizeFileNames({
   inputDirPath,
   outputDirPath,
-  unrecognizedFilesOutputDirPath = path.join((outputDirPath ?? ''), '_UNRECOGNIZED'),
-  recognizedFromFsFilesOutputDirPath = path.join((outputDirPath ?? ''), '_RECOGNIZED_FROM_FS'),
+  unrecognizedFilesOutputDirPath = join(outputDirPath ?? '', '_UNRECOGNIZED'),
+  recognizedFromFsFilesOutputDirPath = join(outputDirPath ?? '', '_RECOGNIZED_FROM_FS'),
   fetchCreationTimeFromFsForUnrecognizedFiles = false,
   isDryRun = false,
 }: {
-  inputDirPath: string,
-  outputDirPath: string,
-  unrecognizedFilesOutputDirPath?: string,
-  recognizedFromFsFilesOutputDirPath?: string,
-  fetchCreationTimeFromFsForUnrecognizedFiles?: boolean,
-  isDryRun?: boolean,
+  inputDirPath: string;
+  outputDirPath: string;
+  unrecognizedFilesOutputDirPath?: string;
+  recognizedFromFsFilesOutputDirPath?: string;
+  fetchCreationTimeFromFsForUnrecognizedFiles?: boolean;
+  isDryRun?: boolean;
 }) {
   let loggingIntervalId;
 
@@ -38,11 +42,11 @@ export default async function normalizeFileNames({
       unrecognized: 0,
     };
 
-    const ensureUnrecognizedFilesOutputDirCreated = ensureDirExistsCached(
+    const ensureUnrecognizedFilesOutputDirCreated = createDirectoryIfNotExistsCached(
       unrecognizedFilesOutputDirPath,
     );
 
-    const ensureRecognizedFromFsFilesOutputDirCreated = ensureDirExistsCached(
+    const ensureRecognizedFromFsFilesOutputDirCreated = createDirectoryIfNotExistsCached(
       recognizedFromFsFilesOutputDirPath,
     );
 
@@ -51,22 +55,18 @@ export default async function normalizeFileNames({
         return;
       }
 
-      const {
-        total, recognizedFromName, recognizedFromFs, unrecognized,
-      } = fileCount;
+      const { total, recognizedFromName, recognizedFromFs, unrecognized } = fileCount;
 
       const processed = recognizedFromName + recognizedFromFs + unrecognized;
 
-      const progressPercentage = Math.floor(
-        100 * (total > 0 ? processed / total : 1),
-      );
+      const progressPercentage = Math.floor(100 * (total > 0 ? processed / total : 1));
 
       logSingleLine(`Processed files: ${processed}/${total} (${progressPercentage}%)`);
     };
 
     loggingIntervalId = setInterval(logProgress, 200);
 
-    await iterateDirectoryChildren(inputDirPath, async (fsEntry) => {
+    await traverseDirectory(inputDirPath, async (fsEntry) => {
       try {
         if (fsEntry.isDirectory) {
           return;
@@ -104,7 +104,7 @@ export default async function normalizeFileNames({
           fileCount.unrecognized += 1;
         }
 
-        const outputFilePath = path.join(outputFileDirPath, outputFileName);
+        const outputFilePath = join(outputFileDirPath, outputFileName);
 
         await processFile({
           inputFilePath: fsEntry.absolutePath,
