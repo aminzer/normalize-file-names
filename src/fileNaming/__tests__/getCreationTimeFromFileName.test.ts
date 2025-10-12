@@ -4,7 +4,7 @@ import getCreationTimeFromFileName from '../getCreationTimeFromFileName.js';
 
 interface TestCase {
   input: string;
-  expectedOutput: number;
+  expectedOutput: Date;
 }
 
 const recognizableCases: TestCase[] = [
@@ -26,32 +26,32 @@ const recognizableCases: TestCase[] = [
   '20010203_040506',
 ].map((input) => ({
   input,
-  expectedOutput: new Date('2001-02-03 04:05:06').valueOf(),
+  expectedOutput: new Date('2001-02-03 04:05:06'),
 }));
 
 recognizableCases.push(
   ...['2001 02 03', '2001.02.03', '2001_02_03', '2001-02-03'].map((input) => ({
     input,
-    expectedOutput: new Date('2001-02-03 00:00:00').valueOf(),
+    expectedOutput: new Date('2001-02-03 00:00:00'),
   })),
 );
 
 recognizableCases.push(
   {
     input: '1600000000000',
-    expectedOutput: new Date(1600000000000).valueOf(),
+    expectedOutput: new Date(1600000000000),
   },
   {
     input: 'IMG_2001_02_03_04_05_06_007',
-    expectedOutput: new Date('2001-02-03 04:05:06.007').valueOf(),
+    expectedOutput: new Date('2001-02-03 04:05:06.007'),
   },
   {
     input: '2021.12.26',
-    expectedOutput: new Date('2021.12.26 00:00:00').valueOf(),
+    expectedOutput: new Date('2021.12.26 00:00:00'),
   },
   {
     input: '20220417_200000',
-    expectedOutput: new Date('2022.04.17 20:00:00').valueOf(),
+    expectedOutput: new Date('2022.04.17 20:00:00'),
   },
 );
 
@@ -74,9 +74,10 @@ describe('getCreationTimeFromFileName', () => {
 
       describe(`when file name is "${fileName}"`, () => {
         it(`returns timestamp of ${expectedOutput}`, () => {
-          const expectedTime = new Date(expectedOutput).valueOf();
-
-          assert.strictEqual(getCreationTimeFromFileName(fileName), expectedTime);
+          assert.strictEqual(
+            getCreationTimeFromFileName(fileName)!.getTime(),
+            expectedOutput.getTime(),
+          );
         });
       });
     });

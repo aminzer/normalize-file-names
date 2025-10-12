@@ -1,9 +1,9 @@
 import { stat } from 'node:fs/promises';
 
-const getCreationTimeFromFs = async (filePath: string): Promise<number> => {
+const getCreationTimeFromFs = async (filePath: string): Promise<Date> => {
   const { birthtime, mtime } = await stat(filePath);
 
-  return Math.min(birthtime.valueOf(), mtime.valueOf());
+  return new Date(Math.min(birthtime.valueOf(), mtime.valueOf()));
 };
 
 export default getCreationTimeFromFs;

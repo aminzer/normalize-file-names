@@ -1,14 +1,14 @@
 import { parse } from 'node:path';
-import timeParsers from './timeParsers/index.js';
+import timeParsers from './fileNameParsers/index.js';
 
-const getCreationTimeFromFileName = (fileName: string): number | null => {
+const getCreationTimeFromFileName = (fileName: string): Date | null => {
   const { name } = parse(fileName);
 
   for (let i = 0; i < timeParsers.length; i += 1) {
-    const time = timeParsers[i](name);
+    const creationTime = timeParsers[i](name);
 
-    if (time !== null && Number.isFinite(time)) {
-      return time;
+    if (creationTime instanceof Date && !isNaN(creationTime.getTime())) {
+      return creationTime;
     }
   }
 

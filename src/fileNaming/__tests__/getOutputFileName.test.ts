@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import getOutputFileName from '../getOutputFileName.js';
 
-const creationTime = new Date('2001-02-03 04:05:06').valueOf();
+const creationTime = new Date('2001-02-03 04:05:06');
 const formattedCreationTime = '20010203_040506000';
 
 describe('getOutputFileName', () => {
