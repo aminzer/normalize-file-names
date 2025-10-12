@@ -34,9 +34,14 @@ describe('getCreationTimeFromFileName', () => {
         '2001_02_03_04_05_06',
         'IMG_2001_02_03_04_05_06',
         'IMG_2001_02_03_04_05_06_1',
+        'IMG_2001_02_03_04_05_06__1',
+        'IMG_2001_02_03_04_05_06___1',
+        'IMG_2001_02_03_04_05_06___unknown_postfix',
         'IMG_2001-02-03_04-05-06',
         'IMG 2001 02 03 04 05 06',
         'IMG-2001.02.03-04.05.06',
+        'IMG_2001_02_03__04_05_06',
+        'IMG_2001_02_03___04_05_06',
         'some-text-here-2001-02-03-04-05-06',
         '20010203_040506',
       ].map((input) => ({
@@ -56,12 +61,28 @@ describe('getCreationTimeFromFileName', () => {
         expectedOutput: new Date('2001-02-03 04:05:06.007'),
       },
       {
+        input: 'IMG_2001_02_03__04_05_06_007',
+        expectedOutput: new Date('2001-02-03 04:05:06.007'),
+      },
+      {
+        input: 'IMG_2001_02_03___04_05_06_007',
+        expectedOutput: new Date('2001-02-03 04:05:06.007'),
+      },
+      {
         input: '2021.12.26',
         expectedOutput: new Date('2021.12.26 00:00:00'),
       },
       {
-        input: '20220417_200000',
-        expectedOutput: new Date('2022.04.17 20:00:00'),
+        input: '20220417_212557',
+        expectedOutput: new Date('2022.04.17 21:25:57'),
+      },
+      {
+        input: '20220417__212557',
+        expectedOutput: new Date('2022.04.17 21:25:57'),
+      },
+      {
+        input: '20220417___212557',
+        expectedOutput: new Date('2022.04.17 21:25:57'),
       },
     ];
 

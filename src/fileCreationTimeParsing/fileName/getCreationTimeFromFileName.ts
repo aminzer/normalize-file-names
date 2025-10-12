@@ -1,7 +1,7 @@
 import { parse } from 'node:path';
 import { isValid } from 'date-fns';
-import parsers from './parsers.js';
 import { SyncFileCreationTimeParser } from '../types.js';
+import parsers from './parsers.js';
 
 const getCreationTimeFromFileName: SyncFileCreationTimeParser = (filePath) => {
   const { name } = parse(filePath);

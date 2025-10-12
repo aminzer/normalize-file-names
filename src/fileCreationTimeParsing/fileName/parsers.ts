@@ -4,7 +4,7 @@ import { parseDate } from './utils.js';
 
 const parsers: FileNameCreationTimeParser[] = [
   (input: string): Date | null => {
-    const match = input.match(`${d4}${_}${d2}${_}${d2}${_}${d2}${_}${d2}${_}${d2}${_}${d3}`);
+    const match = input.match(`${d4}${_}${d2}${_}${d2}${_}+${d2}${_}${d2}${_}${d2}${_}${d3}`);
     if (!match) {
       return null;
     }
@@ -15,7 +15,7 @@ const parsers: FileNameCreationTimeParser[] = [
   },
 
   (input: string): Date | null => {
-    const match = input.match(`${d4}${_}${d2}${_}${d2}${_}${d2}${_}${d2}${_}${d2}`);
+    const match = input.match(`${d4}${_}${d2}${_}${d2}${_}+${d2}${_}${d2}${_}${d2}`);
     if (!match) {
       return null;
     }
@@ -26,7 +26,7 @@ const parsers: FileNameCreationTimeParser[] = [
   },
 
   (input: string): Date | null => {
-    const match = input.match(`${d8}${_}${d6}`);
+    const match = input.match(`${d8}${_}+${d6}`);
     if (!match) {
       return null;
     }
