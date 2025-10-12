@@ -7,10 +7,10 @@ export default async function copyFile(
   targetFilePath: string,
   {
     overwriteIfExists = false,
-    keepSeparateIfExists = false,
+    saveAsNewFileVersionIfExists = false,
   }: {
     overwriteIfExists?: boolean;
-    keepSeparateIfExists?: boolean;
+    saveAsNewFileVersionIfExists?: boolean;
   } = {},
 ): Promise<void> {
   if (!fileExists(targetFilePath) || overwriteIfExists) {
@@ -18,9 +18,9 @@ export default async function copyFile(
     return;
   }
 
-  if (keepSeparateIfExists) {
-    const separateTargetFilePath = await getNonExistentFileVersionPath(targetFilePath);
-    await copyFileFs(sourceFilePath, separateTargetFilePath);
+  if (saveAsNewFileVersionIfExists) {
+    const targetFileVersionPath = await getNonExistentFileVersionPath(targetFilePath);
+    await copyFileFs(sourceFilePath, targetFileVersionPath);
     return;
   }
 

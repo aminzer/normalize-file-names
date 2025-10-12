@@ -19,6 +19,6 @@ export default async function processFile({
   }
 
   await copyFile(inputFilePath, outputFilePath, {
-    keepSeparateIfExists: true,
+    saveAsNewFileVersionIfExists: true,
   });
 }
