@@ -11,12 +11,15 @@ import {
   sleep,
 } from './utils/index.js';
 import normalizeFileNames from '../normalizeFileNames.js';
+import TestLogger from './TestLogger.js';
 
 function getResourcePath(name: string): string {
   return resolve(import.meta.dirname, '../../../test/resources/normalize_file_names', name);
 }
 
 describe('normalizeFileNames', () => {
+  const logger = new TestLogger();
+
   const inputDirPath = getResourcePath('input');
   const outputDirPath = getResourcePath('output');
 
@@ -32,8 +35,8 @@ describe('normalizeFileNames', () => {
 
   describe('when "inputDirPath" isn\'t set', () => {
     it('rejects with error', async () => {
-      await assert.rejects(() => normalizeFileNames({ inputDirPath: '', outputDirPath }), {
-        message: 'Input dir path not set',
+      await assert.rejects(() => normalizeFileNames({ inputDirPath: '', outputDirPath, logger }), {
+        message: 'Input directory path not set',
       });
     });
   });
@@ -42,16 +45,19 @@ describe('normalizeFileNames', () => {
     const invalidPath = join(import.meta.dirname, 'invalid/path');
 
     it('rejects with error', async () => {
-      await assert.rejects(() => normalizeFileNames({ inputDirPath: invalidPath, outputDirPath }), {
-        message: `Input dir path "${invalidPath}" doesn't exist`,
-      });
+      await assert.rejects(
+        () => normalizeFileNames({ inputDirPath: invalidPath, outputDirPath, logger }),
+        {
+          message: `Input directory path "${invalidPath}" doesn't exist`,
+        },
+      );
     });
   });
 
   describe('when "outputDirPath" isn\'t set', () => {
     it('rejects with error', async () => {
-      await assert.rejects(() => normalizeFileNames({ inputDirPath, outputDirPath: '' }), {
-        message: 'Output dir path not set',
+      await assert.rejects(() => normalizeFileNames({ inputDirPath, outputDirPath: '', logger }), {
+        message: 'Output directory path not set',
       });
     });
   });
@@ -60,9 +66,12 @@ describe('normalizeFileNames', () => {
     const invalidPath = join(import.meta.dirname, 'invalid/path');
 
     it('rejects with error', async () => {
-      await assert.rejects(() => normalizeFileNames({ inputDirPath, outputDirPath: invalidPath }), {
-        message: `Output dir path "${invalidPath}" doesn't exist`,
-      });
+      await assert.rejects(
+        () => normalizeFileNames({ inputDirPath, outputDirPath: invalidPath, logger }),
+        {
+          message: `Output directory path "${invalidPath}" doesn't exist`,
+        },
+      );
     });
   });
 
@@ -92,7 +101,7 @@ describe('normalizeFileNames', () => {
 
       describe('when only required args are set', () => {
         beforeEach(async () => {
-          await normalizeFileNames({ inputDirPath, outputDirPath });
+          await normalizeFileNames({ inputDirPath, outputDirPath, logger });
         });
 
         it('copies all recognized files into output directory with normalized names', async () => {
@@ -129,6 +138,7 @@ describe('normalizeFileNames', () => {
             inputDirPath,
             outputDirPath,
             isDryRun: true,
+            logger,
           });
         });
 
@@ -151,6 +161,7 @@ describe('normalizeFileNames', () => {
             inputDirPath,
             outputDirPath,
             fetchCreationTimeFromFsForUnrecognizedFiles: true,
+            logger,
           });
         });
 
@@ -177,7 +188,7 @@ describe('normalizeFileNames', () => {
         await createFile(getResourcePath('input/file-20010203-040506.txt'));
         await createFile(getResourcePath('input/file_2001_02_03-04_05_06.txt'));
 
-        await normalizeFileNames({ inputDirPath, outputDirPath });
+        await normalizeFileNames({ inputDirPath, outputDirPath, logger });
       });
 
       it('copies these files with the same creation time but different postfixes', async () => {
@@ -191,11 +202,11 @@ describe('normalizeFileNames', () => {
       });
     });
 
-    describe('when input dir contains recognizable files only', () => {
+    describe('when input directory contains recognizable files only', () => {
       beforeEach(async () => {
         await createFile(getResourcePath('input/file_20010203_040506.txt'));
 
-        await normalizeFileNames({ inputDirPath, outputDirPath });
+        await normalizeFileNames({ inputDirPath, outputDirPath, logger });
       });
 
       it("doesn't crete folder for unrecognized files", async () => {

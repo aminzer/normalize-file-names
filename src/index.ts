@@ -1,21 +1,18 @@
-import { log } from './logger/index.js';
 import {
   inputDirPath,
   outputDirPath,
   fetchCreationTimeFromFsForUnrecognizedFiles,
   isDryRun,
 } from './config/index.js';
-import normalizeFileNames from './normalizeFileNames/index.js';
+import { StdoutLogger } from './logging/index.js';
+import main from './main.js';
 
-(async () => {
-  try {
-    await normalizeFileNames({
-      inputDirPath,
-      outputDirPath,
-      fetchCreationTimeFromFsForUnrecognizedFiles,
-      isDryRun,
-    });
-  } catch (err) {
-    log(err);
-  }
-})();
+const logger = new StdoutLogger();
+
+main({
+  inputDirPath,
+  outputDirPath,
+  fetchCreationTimeFromFsForUnrecognizedFiles,
+  isDryRun,
+  logger,
+});

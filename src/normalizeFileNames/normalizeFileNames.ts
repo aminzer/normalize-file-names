@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { traverseDirectory } from '@aminzer/traverse-directory';
-import { log, logSingleLine } from '../logger/index.js';
 import { getCreationTimeFromFileName, getOutputFileName } from '../fileNaming/index.js';
+import { LoggerInterface } from '../logging/index.js';
 import {
   getCreationTimeFromFs,
   getFileCount,
@@ -17,6 +17,7 @@ export default async function normalizeFileNames({
   recognizedFromFsFilesOutputDirPath = join(outputDirPath ?? '', '_RECOGNIZED_FROM_FS'),
   fetchCreationTimeFromFsForUnrecognizedFiles = false,
   isDryRun = false,
+  logger,
 }: {
   inputDirPath: string;
   outputDirPath: string;
@@ -24,6 +25,7 @@ export default async function normalizeFileNames({
   recognizedFromFsFilesOutputDirPath?: string;
   fetchCreationTimeFromFsForUnrecognizedFiles?: boolean;
   isDryRun?: boolean;
+  logger: LoggerInterface;
 }) {
   let loggingIntervalId;
 
@@ -33,6 +35,7 @@ export default async function normalizeFileNames({
       outputDirPath,
       fetchCreationTimeFromFsForUnrecognizedFiles,
       isDryRun,
+      logger,
     });
 
     const fileCount = {
@@ -61,7 +64,7 @@ export default async function normalizeFileNames({
 
       const progressPercentage = Math.floor(100 * (total > 0 ? processed / total : 1));
 
-      logSingleLine(`Processed files: ${processed}/${total} (${progressPercentage}%)`);
+      logger.logSingleLine(`Processed files: ${processed}/${total} (${progressPercentage}%)`);
     };
 
     loggingIntervalId = setInterval(logProgress, 200);
@@ -110,21 +113,22 @@ export default async function normalizeFileNames({
           inputFilePath: fsEntry.absolutePath,
           outputFilePath,
           isDryRun,
+          logger,
         });
       } catch (err) {
-        log();
-        log(`Error during processing "${fsEntry.absolutePath}":`);
+        logger.log('');
+        logger.log(`Error during processing "${fsEntry.absolutePath}":`);
         throw err;
       }
     });
 
     logProgress();
-    log();
-    log(`Recognized files (from name): ${fileCount.recognizedFromName}`);
+    logger.log('');
+    logger.log(`Recognized files (from name): ${fileCount.recognizedFromName}`);
     if (fetchCreationTimeFromFsForUnrecognizedFiles) {
-      log(`Recognized files (from FS timestamps): ${fileCount.recognizedFromName}`);
+      logger.log(`Recognized files (from FS timestamps): ${fileCount.recognizedFromName}`);
     } else {
-      log(`Unrecognized files: ${fileCount.unrecognized}`);
+      logger.log(`Unrecognized files: ${fileCount.unrecognized}`);
     }
   } finally {
     if (loggingIntervalId) {

@@ -1,40 +1,42 @@
 import { directoryExists } from '@aminzer/traverse-directory';
-import { log } from '../logger/index.js';
+import { LoggerInterface } from '../logging/index.js';
 
 export default async function prepareForProcessing({
   inputDirPath,
   outputDirPath,
   fetchCreationTimeFromFsForUnrecognizedFiles = false,
   isDryRun = false,
+  logger,
 }: {
   inputDirPath: string;
   outputDirPath: string;
   fetchCreationTimeFromFsForUnrecognizedFiles: boolean;
   isDryRun: boolean;
+  logger: LoggerInterface;
 }): Promise<void> {
   if (!inputDirPath) {
-    throw new Error('Input dir path not set');
+    throw new Error('Input directory path not set');
   }
 
   if (!(await directoryExists(inputDirPath))) {
-    throw new Error(`Input dir path "${inputDirPath}" doesn't exist`);
+    throw new Error(`Input directory path "${inputDirPath}" doesn't exist`);
   }
 
   if (!outputDirPath) {
-    throw new Error('Output dir path not set');
+    throw new Error('Output directory path not set');
   }
 
   if (!(await directoryExists(outputDirPath))) {
-    throw new Error(`Output dir path "${outputDirPath}" doesn't exist`);
+    throw new Error(`Output directory path "${outputDirPath}" doesn't exist`);
   }
 
-  log(`Input dir: "${inputDirPath}"`);
-  log(`Output dir: "${outputDirPath}"`);
+  logger.log(`Input directory: "${inputDirPath}"`);
+  logger.log(`Output directory: "${outputDirPath}"`);
   if (isDryRun) {
-    log("! This is dry run: files won't be copied to the output dir");
+    logger.log("! This is dry run: files won't be copied to the output directory");
   }
   if (fetchCreationTimeFromFsForUnrecognizedFiles) {
-    log('! For unrecognized file names creation time will be fetched from FS attributes');
+    logger.log('! For unrecognized file names creation time will be fetched from FS attributes');
   }
-  log();
+  logger.log('');
 }
