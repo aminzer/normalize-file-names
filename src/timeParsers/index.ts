@@ -1,1 +1,1 @@
-export { default } from './time_parsers.js';
+export { default } from './timeParsers.js';
