@@ -1,16 +1,16 @@
 import { mkdir, open, readdir, rmdir, stat, unlink } from 'node:fs/promises';
 import { join } from 'node:path';
 
-export async function createDir(dirPath: string): Promise<void> {
+export const createDir = async (dirPath: string): Promise<void> => {
   await mkdir(dirPath);
-}
+};
 
-export async function createFile(filePath: string): Promise<void> {
+export const createFile = async (filePath: string): Promise<void> => {
   const fileHandle = await open(filePath, 'w');
   await fileHandle.close();
-}
+};
 
-export async function deleteDir(dirPath: string): Promise<void> {
+export const deleteDir = async (dirPath: string): Promise<void> => {
   const childNames: string[] = await readdir(dirPath);
 
   for (const childName of childNames) {
@@ -25,9 +25,9 @@ export async function deleteDir(dirPath: string): Promise<void> {
   }
 
   await rmdir(dirPath);
-}
+};
 
-async function getChildrenNames(
+const getChildrenNames = async (
   dirPath: string,
   {
     filesOnly = false,
@@ -36,7 +36,7 @@ async function getChildrenNames(
     filesOnly?: boolean;
     dirsOnly?: boolean;
   } = {},
-): Promise<string[]> {
+): Promise<string[]> => {
   const childNames: string[] = await readdir(dirPath);
   const filteredChildNames: string[] = [];
 
@@ -56,12 +56,12 @@ async function getChildrenNames(
   }
 
   return filteredChildNames;
-}
+};
 
-export async function getDirNames(dirPath: string): Promise<string[]> {
+export const getDirNames = async (dirPath: string): Promise<string[]> => {
   return getChildrenNames(dirPath, { dirsOnly: true });
-}
+};
 
-export async function getFileNames(dirPath: string): Promise<string[]> {
+export const getFileNames = async (dirPath: string): Promise<string[]> => {
   return getChildrenNames(dirPath, { filesOnly: true });
-}
+};

@@ -3,9 +3,9 @@ import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import getNonExistentFileVersionPath from '../getNonExistentFileVersionPath.js';
 
-function getResourcePath(name: string): string {
+const getResourcePath = (name: string): string => {
   return resolve(import.meta.dirname, '../../../test/resources/get_non_existent_file_path', name);
-}
+};
 
 describe('getNonExistentFileVersionPath', () => {
   describe("when file doesn't exist", () => {

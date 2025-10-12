@@ -11,7 +11,7 @@ import processFile from './processFile.js';
 import logParameters from './logParameters.js';
 import validateParameters from './validateParameters.js';
 
-export default async function normalizeFileNames({
+const normalizeFileNames = async ({
   inputDirPath,
   outputDirPath,
   unrecognizedFilesOutputDirPath = join(outputDirPath ?? '', '_UNRECOGNIZED'),
@@ -27,7 +27,7 @@ export default async function normalizeFileNames({
   fetchCreationTimeFromFsForUnrecognizedFiles?: boolean;
   isDryRun?: boolean;
   logger: LoggerInterface;
-}) {
+}) => {
   let loggingIntervalId;
 
   try {
@@ -138,4 +138,6 @@ export default async function normalizeFileNames({
       clearInterval(loggingIntervalId);
     }
   }
-}
+};
+
+export default normalizeFileNames;

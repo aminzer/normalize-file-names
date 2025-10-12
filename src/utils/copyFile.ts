@@ -2,7 +2,7 @@ import { copyFile as copyFileFs } from 'node:fs/promises';
 import getNonExistentFileVersionPath from './getNonExistentFileVersionPath.js';
 import fileExists from './fileExists.js';
 
-export default async function copyFile(
+const copyFile = async (
   sourceFilePath: string,
   targetFilePath: string,
   {
@@ -12,7 +12,7 @@ export default async function copyFile(
     overwriteIfExists?: boolean;
     saveAsNewFileVersionIfExists?: boolean;
   } = {},
-): Promise<void> {
+): Promise<void> => {
   if (!fileExists(targetFilePath) || overwriteIfExists) {
     await copyFileFs(sourceFilePath, targetFilePath);
     return;
@@ -25,4 +25,6 @@ export default async function copyFile(
   }
 
   throw new Error(`File "${targetFilePath}" already exists"`);
-}
+};
+
+export default copyFile;

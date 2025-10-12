@@ -1,6 +1,6 @@
 import { traverseDirectory } from '@aminzer/traverse-directory';
 
-export default async function getFileCount(dirPath: string): Promise<number> {
+const getFileCount = async (dirPath: string): Promise<number> => {
   let fileCount = 0;
 
   await traverseDirectory(dirPath, (fsEntry) => {
@@ -10,4 +10,6 @@ export default async function getFileCount(dirPath: string): Promise<number> {
   });
 
   return fileCount;
-}
+};
+
+export default getFileCount;

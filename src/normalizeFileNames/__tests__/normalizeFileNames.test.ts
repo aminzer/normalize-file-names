@@ -13,9 +13,9 @@ import {
 import normalizeFileNames from '../normalizeFileNames.js';
 import TestLogger from './TestLogger.js';
 
-function getResourcePath(name: string): string {
+const getResourcePath = (name: string): string => {
   return resolve(import.meta.dirname, '../../../test/resources/normalize_file_names', name);
-}
+};
 
 describe('normalizeFileNames', () => {
   const logger = new TestLogger();
