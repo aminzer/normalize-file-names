@@ -2,59 +2,6 @@ import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import getCreationTimeFromFileName from '../getCreationTimeFromFileName.js';
 
-interface TestCase {
-  input: string;
-  expectedOutput: Date;
-}
-
-const recognizableCases: TestCase[] = [
-  '20010203040506',
-  'IMG_20010203040506',
-  'IMG_20010203040506_1',
-  'IMG_20010203_040506',
-  'IMG_20010203_040506_1',
-  'IMG-20010203-040506',
-  'IMG.20010203.040506',
-  'IMG 20010203 040506',
-  '2001_02_03_04_05_06',
-  'IMG_2001_02_03_04_05_06',
-  'IMG_2001_02_03_04_05_06_1',
-  'IMG_2001-02-03_04-05-06',
-  'IMG 2001 02 03 04 05 06',
-  'IMG-2001.02.03-04.05.06',
-  'some-text-here-2001-02-03-04-05-06',
-  '20010203_040506',
-].map((input) => ({
-  input,
-  expectedOutput: new Date('2001-02-03 04:05:06'),
-}));
-
-recognizableCases.push(
-  ...['2001 02 03', '2001.02.03', '2001_02_03', '2001-02-03'].map((input) => ({
-    input,
-    expectedOutput: new Date('2001-02-03 00:00:00'),
-  })),
-);
-
-recognizableCases.push(
-  {
-    input: '1600000000000',
-    expectedOutput: new Date(1600000000000),
-  },
-  {
-    input: 'IMG_2001_02_03_04_05_06_007',
-    expectedOutput: new Date('2001-02-03 04:05:06.007'),
-  },
-  {
-    input: '2021.12.26',
-    expectedOutput: new Date('2021.12.26 00:00:00'),
-  },
-  {
-    input: '20220417_200000',
-    expectedOutput: new Date('2022.04.17 20:00:00'),
-  },
-);
-
 describe('getCreationTimeFromFileName', () => {
   describe("when file name doesn't contain recognizable time", () => {
     const unrecognizableFilenames = [
@@ -74,6 +21,50 @@ describe('getCreationTimeFromFileName', () => {
   });
 
   describe('when file name contains recognizable time', () => {
+    const recognizableCases: { input: string; expectedOutput: Date }[] = [
+      ...[
+        '20010203040506',
+        'IMG_20010203040506',
+        'IMG_20010203040506_1',
+        'IMG_20010203_040506',
+        'IMG_20010203_040506_1',
+        'IMG-20010203-040506',
+        'IMG.20010203.040506',
+        'IMG 20010203 040506',
+        '2001_02_03_04_05_06',
+        'IMG_2001_02_03_04_05_06',
+        'IMG_2001_02_03_04_05_06_1',
+        'IMG_2001-02-03_04-05-06',
+        'IMG 2001 02 03 04 05 06',
+        'IMG-2001.02.03-04.05.06',
+        'some-text-here-2001-02-03-04-05-06',
+        '20010203_040506',
+      ].map((input) => ({
+        input,
+        expectedOutput: new Date('2001-02-03 04:05:06'),
+      })),
+      ...['2001 02 03', '2001.02.03', '2001_02_03', '2001-02-03'].map((input) => ({
+        input,
+        expectedOutput: new Date('2001-02-03 00:00:00'),
+      })),
+      {
+        input: '1600000000000',
+        expectedOutput: new Date(1600000000000),
+      },
+      {
+        input: 'IMG_2001_02_03_04_05_06_007',
+        expectedOutput: new Date('2001-02-03 04:05:06.007'),
+      },
+      {
+        input: '2021.12.26',
+        expectedOutput: new Date('2021.12.26 00:00:00'),
+      },
+      {
+        input: '20220417_200000',
+        expectedOutput: new Date('2022.04.17 20:00:00'),
+      },
+    ];
+
     recognizableCases.forEach(({ input, expectedOutput }) => {
       const fileName = `${input}.jpg`;
 

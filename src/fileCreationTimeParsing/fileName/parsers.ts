@@ -10,7 +10,8 @@ const parsers: FileNameCreationTimeParser[] = [
     }
 
     const timeStr = match.slice(1, 8).join('');
-    return parseDate(timeStr, 'yyyyMMddHHmmssSSS');
+
+    return parseDate(timeStr, { format: 'yyyyMMddHHmmssSSS' });
   },
 
   (input: string): Date | null => {
@@ -20,7 +21,8 @@ const parsers: FileNameCreationTimeParser[] = [
     }
 
     const timeStr = match.slice(1, 7).join('');
-    return parseDate(timeStr);
+
+    return parseDate(timeStr, { format: 'yyyyMMddHHmmss' });
   },
 
   (input: string): Date | null => {
@@ -30,7 +32,8 @@ const parsers: FileNameCreationTimeParser[] = [
     }
 
     const timeStr = match.slice(1, 3).join('');
-    return parseDate(timeStr);
+
+    return parseDate(timeStr, { format: 'yyyyMMddHHmmss' });
   },
 
   (input: string): Date | null => {
@@ -40,12 +43,14 @@ const parsers: FileNameCreationTimeParser[] = [
     }
 
     const timeStr = match.slice(1, 4).join('');
-    return parseDate(timeStr, 'yyyyMMdd');
+
+    return parseDate(timeStr, { format: 'yyyyMMdd' });
   },
 
   (input: string): Date | null => {
     const match = input.match(d14);
-    return match ? parseDate(match[1]) : null;
+
+    return match ? parseDate(match[1], { format: 'yyyyMMddHHmmss' }) : null;
   },
 
   (input: string): Date | null => (/^\d+$/.test(input) ? new Date(+input) : null),
