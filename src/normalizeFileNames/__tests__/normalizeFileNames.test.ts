@@ -24,6 +24,8 @@ describe('normalizeFileNames', () => {
   const outputDirPath = getResourcePath('output');
 
   beforeEach(async () => {
+    logger.reset();
+
     await createDir(inputDirPath);
     await createDir(outputDirPath);
   });
@@ -130,6 +132,17 @@ describe('normalizeFileNames', () => {
             'unrecognizable_file_b.txt',
           ]);
         });
+
+        it('outputs the expected log messages', async () => {
+          assert.deepStrictEqual(logger.getMessages(), [
+            `Input directory: "${inputDirPath}"`,
+            `Output directory: "${outputDirPath}"`,
+            '',
+            '',
+            'Recognized files (from name): 4',
+            'Unrecognized files: 3',
+          ]);
+        });
       });
 
       describe('when "isDryRun" is set to "true"', () => {
@@ -152,6 +165,25 @@ describe('normalizeFileNames', () => {
           const dirNames = await getDirNames(getResourcePath(outputDirPath));
 
           assert.deepStrictEqual(dirNames, []);
+        });
+
+        it('outputs the expected log messages', async () => {
+          assert.deepStrictEqual(logger.getMessages(), [
+            `Input directory: "${inputDirPath}"`,
+            `Output directory: "${outputDirPath}"`,
+            "! This is dry run: files won't be copied to the output directory",
+            '',
+            '"file_20010203_040506_2.txt" -> "20010203_040506000.txt"',
+            '"2021.12.26.txt" -> "20211226_000000000.txt"',
+            '"file_20020304_050607.txt" -> "20020304_050607000.txt"',
+            '"unrecognizable_file_a.txt" -> "unrecognizable_file_a.txt"',
+            '"file_20030405_060708.txt" -> "20030405_060708000.txt"',
+            '"unrecognizable_file_b.txt" -> "unrecognizable_file_b.txt"',
+            '"unrecognizable_file.txt" -> "unrecognizable_file.txt"',
+            '',
+            'Recognized files (from name): 4',
+            'Unrecognized files: 3',
+          ]);
         });
       });
 
@@ -178,6 +210,18 @@ describe('normalizeFileNames', () => {
           });
 
           assert.strictEqual(areAllFilesHaveExpectedNames, true);
+        });
+
+        it('outputs the expected log messages', async () => {
+          assert.deepStrictEqual(logger.getMessages(), [
+            `Input directory: "${inputDirPath}"`,
+            `Output directory: "${outputDirPath}"`,
+            '! For unrecognized file names creation time will be fetched from FS attributes',
+            '',
+            '',
+            'Recognized files (from name): 4',
+            'Recognized files (from FS timestamps): 4',
+          ]);
         });
       });
     });
