@@ -10,7 +10,7 @@ import {
   getFileNames,
   sleep,
 } from './utils/index.js';
-import normalizeFileNames from '../normalize_file_names.js';
+import normalizeFileNames from '../normalizeFileNames.js';
 
 function getResourcePath(name: string): string {
   return resolve(import.meta.dirname, '../../../test/resources/normalize_file_names', name);

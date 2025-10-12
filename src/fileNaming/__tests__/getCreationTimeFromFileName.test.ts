@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import getCreationTimeFromFileName from '../get_creation_time_from_file_name.js';
+import getCreationTimeFromFileName from '../getCreationTimeFromFileName.js';
 
 interface TestCase {
   input: string;

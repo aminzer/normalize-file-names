@@ -5,7 +5,7 @@ import {
   fetchCreationTimeFromFsForUnrecognizedFiles,
   isDryRun,
 } from './config/index.js';
-import normalizeFileNames from './normalize_file_names/index.js';
+import normalizeFileNames from './normalizeFileNames/index.js';
 
 (async () => {
   try {

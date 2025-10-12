@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
-import getNextFileVersionPath from '../get_next_file_version_path.js';
+import getNextFileVersionPath from '../getNextFileVersionPath.js';
 
 describe('getNextFileVersionPath', () => {
   describe("when file doesn't have postfix", () => {

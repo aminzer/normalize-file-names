@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
-import getNonExistentFileVersionPath from '../get_non_existent_file_version_path.js';
+import getNonExistentFileVersionPath from '../getNonExistentFileVersionPath.js';
 
 function getResourcePath(name: string): string {
   return resolve(import.meta.dirname, '../../../test/resources/get_non_existent_file_path', name);

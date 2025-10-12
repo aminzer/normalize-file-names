@@ -1,5 +1,5 @@
 import { parse } from 'node:path';
-import timeParsers from '../time_parsers/index.js';
+import timeParsers from '../timeParsers/index.js';
 
 export default function getCreationTimeFromFileName(fileName: string): number | null {
   const { name } = parse(fileName);

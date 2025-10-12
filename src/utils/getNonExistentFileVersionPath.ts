@@ -1,10 +1,10 @@
-import getNextFileVersionPath from './get_next_file_version_path.js';
-import isFileExist from './is_file_exist.js';
+import getNextFileVersionPath from './getNextFileVersionPath.js';
+import fileExists from './fileExists.js';
 
 export default async function getNonExistentFileVersionPath(
   possibleFilePath: string,
 ): Promise<string> {
-  if (!(await isFileExist(possibleFilePath))) {
+  if (!(await fileExists(possibleFilePath))) {
     return possibleFilePath;
   }
 
