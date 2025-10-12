@@ -8,7 +8,8 @@ import {
   createDirectoryIfNotExistsCached,
 } from '../utils/index.js';
 import processFile from './processFile.js';
-import prepareForProcessing from './prepareForProcessing.js';
+import logParameters from './logParameters.js';
+import validateParameters from './validateParameters.js';
 
 export default async function normalizeFileNames({
   inputDirPath,
@@ -30,7 +31,9 @@ export default async function normalizeFileNames({
   let loggingIntervalId;
 
   try {
-    await prepareForProcessing({
+    await validateParameters({ inputDirPath, outputDirPath });
+
+    await logParameters({
       inputDirPath,
       outputDirPath,
       fetchCreationTimeFromFsForUnrecognizedFiles,

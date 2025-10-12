@@ -1,7 +1,6 @@
-import { directoryExists } from '@aminzer/traverse-directory';
 import { LoggerInterface } from '../logging/index.js';
 
-export default async function prepareForProcessing({
+const logParameters = async ({
   inputDirPath,
   outputDirPath,
   fetchCreationTimeFromFsForUnrecognizedFiles = false,
@@ -13,23 +12,7 @@ export default async function prepareForProcessing({
   fetchCreationTimeFromFsForUnrecognizedFiles: boolean;
   isDryRun: boolean;
   logger: LoggerInterface;
-}): Promise<void> {
-  if (!inputDirPath) {
-    throw new Error('Input directory path not set');
-  }
-
-  if (!(await directoryExists(inputDirPath))) {
-    throw new Error(`Input directory path "${inputDirPath}" doesn't exist`);
-  }
-
-  if (!outputDirPath) {
-    throw new Error('Output directory path not set');
-  }
-
-  if (!(await directoryExists(outputDirPath))) {
-    throw new Error(`Output directory path "${outputDirPath}" doesn't exist`);
-  }
-
+}): Promise<void> => {
   logger.log(`Input directory: "${inputDirPath}"`);
   logger.log(`Output directory: "${outputDirPath}"`);
   if (isDryRun) {
@@ -39,4 +22,6 @@ export default async function prepareForProcessing({
     logger.log('! For unrecognized file names creation time will be fetched from FS attributes');
   }
   logger.log('');
-}
+};
+
+export default logParameters;
