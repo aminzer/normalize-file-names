@@ -1,6 +1,6 @@
 import { parse } from 'node:path';
-import { LoggerInterface } from '../logging/index.js';
-import { copyFile } from '../utils/index.js';
+import { LoggerInterface } from '../../logging/index.js';
+import { copyFile } from '../../utils/index.js';
 
 const processFile = async ({
   inputFilePath,

@@ -1,15 +1,14 @@
 import { join } from 'node:path';
 import { traverseDirectory } from '@aminzer/traverse-directory';
-import { getCreationTimeFromFileName, getOutputFileName } from '../fileNaming/index.js';
+import { getCreationTimeFromFileName } from '../fileNaming/index.js';
 import { LoggerInterface } from '../logging/index.js';
 import {
   getCreationTimeFromFs,
   getFileCount,
   createDirectoryIfNotExistsCached,
 } from '../utils/index.js';
-import processFile from './processFile.js';
-import logParameters from './logParameters.js';
-import validateParameters from './validateParameters.js';
+import { getOutputFileName, processFile } from './fileProcessing/index.js';
+import { logParameters, validateParameters } from './parameters/index.js';
 
 const normalizeFileNames = async ({
   inputDirPath,

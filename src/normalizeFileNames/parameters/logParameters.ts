@@ -1,4 +1,4 @@
-import { LoggerInterface } from '../logging/index.js';
+import { LoggerInterface } from '../../logging/index.js';
 
 const logParameters = async ({
   inputDirPath,
