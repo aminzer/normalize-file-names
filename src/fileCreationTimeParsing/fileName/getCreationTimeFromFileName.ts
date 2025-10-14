@@ -9,7 +9,7 @@ const getCreationTimeFromFileName: SyncFileCreationTimeParser = (filePath) => {
   for (let i = 0; i < parsers.length; i += 1) {
     const creationTime = parsers[i](name);
 
-    if (isValid(creationTime)) {
+    if (creationTime && isValid(creationTime)) {
       return creationTime;
     }
   }
