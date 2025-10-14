@@ -187,12 +187,12 @@ describe('normalizeFileNames', () => {
         });
       });
 
-      describe('when "fetchCreationTimeFromFsForUnrecognizedFiles" is set to "true"', () => {
+      describe('when "isFileSystemMetadataFallbackEnabled" is set to "true"', () => {
         beforeEach(async () => {
           await normalizeFileNames({
             inputDirPath,
             outputDirPath,
-            fetchCreationTimeFromFsForUnrecognizedFiles: true,
+            isFileSystemMetadataFallbackEnabled: true,
             logger,
           });
         });
@@ -216,7 +216,7 @@ describe('normalizeFileNames', () => {
           assert.deepStrictEqual(logger.getMessages(), [
             `Input directory: "${inputDirPath}"`,
             `Output directory: "${outputDirPath}"`,
-            '! For unrecognized file names creation time will be fetched from FS attributes',
+            '! For unrecognized file names creation time will be fetched from file system file metadata',
             '',
             '',
             'Recognized files (from name): 4',

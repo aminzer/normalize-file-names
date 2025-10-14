@@ -1,7 +1,7 @@
 import {
   inputDirPath,
   outputDirPath,
-  fetchCreationTimeFromFsForUnrecognizedFiles,
+  isFileSystemMetadataFallbackEnabled,
   isDryRun,
 } from './config/index.js';
 import { StdoutLogger } from './logging/index.js';
@@ -12,7 +12,7 @@ const logger = new StdoutLogger();
 main({
   inputDirPath,
   outputDirPath,
-  fetchCreationTimeFromFsForUnrecognizedFiles,
+  isFileSystemMetadataFallbackEnabled,
   isDryRun,
   logger,
 });

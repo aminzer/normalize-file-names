@@ -5,6 +5,8 @@ export const d3 = digitsGroup(3);
 export const d4 = digitsGroup(4);
 export const d6 = digitsGroup(6);
 export const d8 = digitsGroup(8);
+export const d9 = digitsGroup(9);
 export const d14 = digitsGroup(14);
+export const d17 = digitsGroup(17);
 
 export const _ = '[ ._-]';

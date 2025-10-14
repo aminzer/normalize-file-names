@@ -4,13 +4,13 @@ import normalizeFileNames from './normalizeFileNames/index.js';
 const main = async ({
   inputDirPath,
   outputDirPath,
-  fetchCreationTimeFromFsForUnrecognizedFiles,
+  isFileSystemMetadataFallbackEnabled,
   isDryRun,
   logger,
 }: {
   inputDirPath: string;
   outputDirPath: string;
-  fetchCreationTimeFromFsForUnrecognizedFiles?: boolean;
+  isFileSystemMetadataFallbackEnabled?: boolean;
   isDryRun?: boolean;
   logger: LoggerInterface;
 }): Promise<void> => {
@@ -18,7 +18,7 @@ const main = async ({
     await normalizeFileNames({
       inputDirPath,
       outputDirPath,
-      fetchCreationTimeFromFsForUnrecognizedFiles,
+      isFileSystemMetadataFallbackEnabled,
       isDryRun,
       logger,
     });

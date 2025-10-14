@@ -14,7 +14,7 @@ const normalizeFileNames = async ({
   outputDirPath,
   unrecognizedFilesOutputDirPath = join(outputDirPath ?? '', '_UNRECOGNIZED'),
   recognizedFromFsFilesOutputDirPath = join(outputDirPath ?? '', '_RECOGNIZED_FROM_FS'),
-  fetchCreationTimeFromFsForUnrecognizedFiles = false,
+  isFileSystemMetadataFallbackEnabled = false,
   isDryRun = false,
   logger,
 }: {
@@ -22,7 +22,7 @@ const normalizeFileNames = async ({
   outputDirPath: string;
   unrecognizedFilesOutputDirPath?: string;
   recognizedFromFsFilesOutputDirPath?: string;
-  fetchCreationTimeFromFsForUnrecognizedFiles?: boolean;
+  isFileSystemMetadataFallbackEnabled?: boolean;
   isDryRun?: boolean;
   logger: LoggerInterface;
 }) => {
@@ -34,7 +34,7 @@ const normalizeFileNames = async ({
     await logParameters({
       inputDirPath,
       outputDirPath,
-      fetchCreationTimeFromFsForUnrecognizedFiles,
+      isFileSystemMetadataFallbackEnabled,
       isDryRun,
       logger,
     });
@@ -86,7 +86,7 @@ const normalizeFileNames = async ({
           outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFileName);
 
           fileCount.recognizedFromName += 1;
-        } else if (fetchCreationTimeFromFsForUnrecognizedFiles) {
+        } else if (isFileSystemMetadataFallbackEnabled) {
           if (!isDryRun) {
             await ensureRecognizedFromFsFilesOutputDirCreated();
           }
@@ -126,7 +126,7 @@ const normalizeFileNames = async ({
     logProgress();
     logger.log('');
     logger.log(`Recognized files (from name): ${fileCount.recognizedFromName}`);
-    if (fetchCreationTimeFromFsForUnrecognizedFiles) {
+    if (isFileSystemMetadataFallbackEnabled) {
       logger.log(`Recognized files (from FS timestamps): ${fileCount.recognizedFromName}`);
     } else {
       logger.log(`Unrecognized files: ${fileCount.unrecognized}`);

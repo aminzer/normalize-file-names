@@ -3,13 +3,13 @@ import { LoggerInterface } from '../../logging/index.js';
 const logParameters = async ({
   inputDirPath,
   outputDirPath,
-  fetchCreationTimeFromFsForUnrecognizedFiles = false,
+  isFileSystemMetadataFallbackEnabled = false,
   isDryRun = false,
   logger,
 }: {
   inputDirPath: string;
   outputDirPath: string;
-  fetchCreationTimeFromFsForUnrecognizedFiles: boolean;
+  isFileSystemMetadataFallbackEnabled: boolean;
   isDryRun: boolean;
   logger: LoggerInterface;
 }): Promise<void> => {
@@ -18,8 +18,10 @@ const logParameters = async ({
   if (isDryRun) {
     logger.log("! This is dry run: files won't be copied to the output directory");
   }
-  if (fetchCreationTimeFromFsForUnrecognizedFiles) {
-    logger.log('! For unrecognized file names creation time will be fetched from FS attributes');
+  if (isFileSystemMetadataFallbackEnabled) {
+    logger.log(
+      '! For unrecognized file names creation time will be fetched from file system file metadata',
+    );
   }
   logger.log('');
 };
