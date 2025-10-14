@@ -83,6 +83,16 @@ const parsers: FileNameCreationTimeParser[] = [
     return parseDate(match[1], { format: 'yyyyMMddHHmmss' });
   },
 
+  (fileName: string): Date | null => {
+    const match = fileName.match(d8);
+
+    if (!match) {
+      return null;
+    }
+
+    return parseDate(match[1], { format: 'yyyyMMdd' });
+  },
+
   (fileName: string): Date | null => (/^\d+$/.test(fileName) ? new Date(+fileName) : null),
 ];
 

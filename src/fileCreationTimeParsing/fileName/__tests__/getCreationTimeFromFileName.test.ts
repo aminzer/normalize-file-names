@@ -117,6 +117,10 @@ describe('getCreationTimeFromFileName', () => {
         filePath: '1600000000000.jpg',
         expectedCreationTime: new Date(1600000000000),
       },
+      {
+        filePath: 'some-file-20250315.txt',
+        expectedCreationTime: new Date('2025.03.15 00:00:00'),
+      },
     ];
 
     recognizableCases.forEach(({ filePath, expectedCreationTime }) => {
