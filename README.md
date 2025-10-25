@@ -1,51 +1,115 @@
+# normalize-file-names
+
 ### Overview
 
-[NodeJS](https://nodejs.org) utility for file name normalization.
+[Node.js](https://nodejs.org) utility for file name normalizing based on embedded or inferred creation dates.
 
-### Usage scope
+It helps bring order to media files originating from various devices or apps by renaming them into a unified, chronological format.
 
-Different media file sources might generate file names in different formats.
+---
 
-E.g. images captured with a smartphone camera might have following name format:
+### Why
+
+Different devices and apps use inconsistent file naming conventions.
+For example:
+
+**Smartphone camera:**
+
 ```
-IMG_20150715_114509.jpg
-```
-
-And images sent via messengers - following:
-```
-viber_image_2015-07-15_11-45-09.jpg
-```
-
-After merging media from different sources files into a single directory it can be tricky to sort files in chronological order.
-Original file creation/modification timestamps might be lost in process of data transferring.
-
-This utility can convert file names from different sources to the same format containing file creation date:
-```
-20150715_114509000.jpg
+IMG_20250715_114509.jpg
 ```
 
-Thus sorting files by name also sorts them in chronological order.
+**Messenger app (e.g., Viber):**
+
+```
+viber_image_2025-07-15_11-45-09.jpg
+```
+
+When you merge files from multiple sources into a single folder, chronological sorting can break—especially if the original creation / modification timestamps were lost during transfer.
+
+This utility renames files into a consistent format that encodes the date and time:
+
+```
+20250715_114509000.jpg
+```
+
+This way, **sorting by file name = sorting by time**.
+
+---
 
 ### Installation
 
-```
+```bash
 git clone git@github.com:aminzer/normalize-file-names.git
 cd normalize-file-names
-npm i
+npm install
 ```
+
+---
 
 ### Usage
 
-```
+```bash
 npm start
 ```
 
-Arguments:
-- `INPUT_DIR_PATH` (`string`, required) - path to the input directory containing files to rename. Files from all nested sub-directories are processed too. Files from input directory are not renamed themselves - they are copied to the output directory with new names.
-- `OUTPUT_DIR_PATH` (`string`, required) - path to the output directory where renamed files are copied to. All files are copied to the output directory root regardless of their location relative to the input directory. Files with unrecognized names are copied to the special output directory subfolder named `_UNRECOGNIZED`.
-- `DRY_RUN` (`boolean`, `false` by default) - when enabled files are not copied to the output directory - their name changes are just logged to the console output. It can be used to check if the files can be recognized.
-- `FS_METADATA_FALLBACK` (`boolean`, `false` by default) - when enabled creation time of files with unrecognized names is fetched from file system file metadata: minimum of file creation time (`birthtime`) and last modification time (`mtime`).
+#### Arguments
 
-The arguments above can be set via one of the following methods:
-- Setting corresponding system Environment Variables
-- Creating [.env file](https://www.npmjs.com/package/dotenv) in the root project directory
+| Name                       | Type      | Default | Description                                                                                                                                                                                                                   |
+| -------------------------- | --------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`INPUT_DIR_PATH`**       | `string`  | —       | Path to the input directory containing files to rename. Files in nested subdirectories are also processed. The original files are not renamed — instead, copies are created in the output directory.                          |
+| **`OUTPUT_DIR_PATH`**      | `string`  | —       | Path to the output directory where renamed files are written. All files are copied directly into this directory’s root (subdirectory structure is flattened). Files with unrecognized names are placed under `_UNRECOGNIZED`. |
+| **`DRY_RUN`**              | `boolean` | `false` | If enabled, files are not copied. Instead, the planned name changes are logged to the console. Useful for testing recognition logic.                                                                                          |
+| **`FS_METADATA_FALLBACK`** | `boolean` | `false` | If enabled, files with unrecognized names will fall back to using filesystem metadata: the earlier of the file’s creation (`birthtime`) and modification (`mtime`) timestamps.                                                |
+
+---
+
+### Configuration
+
+You can set the arguments using one of the following methods:
+
+1. **Environment variables**
+   ```bash
+   INPUT_DIR_PATH=/path/to/input OUTPUT_DIR_PATH=/path/to/output npm start
+   ```
+
+2. **`.env` file**  
+   Create a `.env` file in the project root (supported via [dotenv](https://www.npmjs.com/package/dotenv)):
+
+   ```env
+   INPUT_DIR_PATH=/path/to/input
+   OUTPUT_DIR_PATH=/path/to/output
+   DRY_RUN=true
+   FS_METADATA_FALLBACK=false
+   ```
+
+---
+
+### Example
+
+```bash
+INPUT_DIR_PATH=~/photos/raw \
+OUTPUT_DIR_PATH=~/photos/normalized \
+FS_METADATA_FALLBACK=true \
+npm start
+```
+
+---
+
+### Result
+
+Before:
+```
+viber_image_2025-07-15_11-45-09.jpg
+IMG_20250716_231551.png
+20250717.mp4
+```
+
+After:
+```
+20250715_114509000.jpg
+20250716_231551000.png
+20250717_000000000.mp4
+```
+
+Now, simply sorting by name reflects the chronological order of your files.
