@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import getOutputFileName from '../getOutputFileName.js';
 
 const creationTime = new Date('2001-02-03 04:05:06');
-const formattedCreationTime = '20010203_040506000';
+const formattedCreationTime = '2001_02_03__04_05_06_000';
 
 describe('getOutputFileName', () => {
   describe("when file name doesn't contain extension", () => {

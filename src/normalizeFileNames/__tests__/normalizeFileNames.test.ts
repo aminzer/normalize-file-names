@@ -110,10 +110,10 @@ describe('normalizeFileNames', () => {
           const recognizedFileNames = await getFileNames(outputDirPath);
 
           assert.deepStrictEqual(recognizedFileNames, [
-            '20010203_040506000.txt',
-            '20020304_050607000.txt',
-            '20030405_060708000.txt',
-            '20211226_000000000.txt',
+            '2001_02_03__04_05_06_000.txt',
+            '2002_03_04__05_06_07_000.txt',
+            '2003_04_05__06_07_08_000.txt',
+            '2021_12_26__00_00_00_000.txt',
           ]);
         });
 
@@ -173,11 +173,11 @@ describe('normalizeFileNames', () => {
             `Output directory: "${outputDirPath}"`,
             "! This is dry run: files won't be copied to the output directory",
             '',
-            '"file_20010203_040506_2.txt" -> "20010203_040506000.txt"',
-            '"2021.12.26.txt" -> "20211226_000000000.txt"',
-            '"file_20020304_050607.txt" -> "20020304_050607000.txt"',
+            '"file_20010203_040506_2.txt" -> "2001_02_03__04_05_06_000.txt"',
+            '"2021.12.26.txt" -> "2021_12_26__00_00_00_000.txt"',
+            '"file_20020304_050607.txt" -> "2002_03_04__05_06_07_000.txt"',
             '"unrecognizable_file_a.txt" -> "unrecognizable_file_a.txt"',
-            '"file_20030405_060708.txt" -> "20030405_060708000.txt"',
+            '"file_20030405_060708.txt" -> "2003_04_05__06_07_08_000.txt"',
             '"unrecognizable_file_b.txt" -> "unrecognizable_file_b.txt"',
             '"unrecognizable_file.txt" -> "unrecognizable_file.txt"',
             '',
@@ -204,7 +204,7 @@ describe('normalizeFileNames', () => {
 
           const areAllFilesHaveExpectedNames = unrecognizedFileNames.every((fileName) => {
             const { name } = parseFs(fileName);
-            const date = parse(name, 'yyyyMMdd_HHmmssSSS', new Date(0));
+            const date = parse(name, 'yyyy_MM_dd__HH_mm_ss_SSS', new Date(0));
 
             return isValid(date);
           });
@@ -239,9 +239,9 @@ describe('normalizeFileNames', () => {
         const fileNames = await getFileNames(getResourcePath('output'));
 
         assert.deepStrictEqual(fileNames, [
-          '20010203_040506000.txt',
-          '20010203_040506000__1.txt',
-          '20010203_040506000__2.txt',
+          '2001_02_03__04_05_06_000.txt',
+          '2001_02_03__04_05_06_000__1.txt',
+          '2001_02_03__04_05_06_000__2.txt',
         ]);
       });
     });

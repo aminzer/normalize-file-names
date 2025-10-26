@@ -30,7 +30,7 @@ When you merge files from multiple sources into a single folder, chronological s
 This utility renames files into a consistent format that encodes the date and time:
 
 ```
-20250715_114509000.jpg
+2025_07_15__11_45_09_000.jpg
 ```
 
 This way, **sorting by file name = sorting by time**.
@@ -107,9 +107,9 @@ IMG_20250716_231551.png
 
 After:
 ```
-20250715_114509000.jpg
-20250716_231551000.png
-20250717_000000000.mp4
+2025_07_15__11_45_09_000.jpg
+2025_07_16__23_15_51_000.png
+2025_07_17__00_00_00_000.mp4
 ```
 
 Now, simply sorting by name reflects the chronological order of your files.

@@ -1,7 +1,7 @@
 import { parse } from 'node:path';
 import { format } from 'date-fns';
 
-const TIME_FORMAT = 'yyyyMMdd_HHmmssSSS';
+const TIME_FORMAT = 'yyyy_MM_dd__HH_mm_ss_SSS';
 
 const getOutputFileName = (inputFileName: string, creationTime: Date): string => {
   const { ext } = parse(inputFileName);
