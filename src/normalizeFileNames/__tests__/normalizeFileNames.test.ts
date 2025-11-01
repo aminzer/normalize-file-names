@@ -17,6 +17,8 @@ const getResourcePath = (name: string): string => {
   return resolve(import.meta.dirname, '../../../test/resources/normalize_file_names', name);
 };
 
+const outputFileNameFormat = 'yyyy_MM_dd__HH_mm_ss_SSS';
+
 describe('normalizeFileNames', () => {
   const logger = new TestLogger();
 
@@ -37,9 +39,12 @@ describe('normalizeFileNames', () => {
 
   describe('when "inputDirPath" isn\'t set', () => {
     it('rejects with error', async () => {
-      await assert.rejects(() => normalizeFileNames({ inputDirPath: '', outputDirPath, logger }), {
-        message: 'Input directory path not set',
-      });
+      await assert.rejects(
+        () => normalizeFileNames({ inputDirPath: '', outputDirPath, outputFileNameFormat, logger }),
+        {
+          message: 'Input directory path not set',
+        },
+      );
     });
   });
 
@@ -48,7 +53,13 @@ describe('normalizeFileNames', () => {
 
     it('rejects with error', async () => {
       await assert.rejects(
-        () => normalizeFileNames({ inputDirPath: invalidPath, outputDirPath, logger }),
+        () =>
+          normalizeFileNames({
+            inputDirPath: invalidPath,
+            outputDirPath,
+            outputFileNameFormat,
+            logger,
+          }),
         {
           message: `Input directory path "${invalidPath}" doesn't exist`,
         },
@@ -58,9 +69,12 @@ describe('normalizeFileNames', () => {
 
   describe('when "outputDirPath" isn\'t set', () => {
     it('rejects with error', async () => {
-      await assert.rejects(() => normalizeFileNames({ inputDirPath, outputDirPath: '', logger }), {
-        message: 'Output directory path not set',
-      });
+      await assert.rejects(
+        () => normalizeFileNames({ inputDirPath, outputDirPath: '', outputFileNameFormat, logger }),
+        {
+          message: 'Output directory path not set',
+        },
+      );
     });
   });
 
@@ -69,7 +83,13 @@ describe('normalizeFileNames', () => {
 
     it('rejects with error', async () => {
       await assert.rejects(
-        () => normalizeFileNames({ inputDirPath, outputDirPath: invalidPath, logger }),
+        () =>
+          normalizeFileNames({
+            inputDirPath,
+            outputDirPath: invalidPath,
+            outputFileNameFormat,
+            logger,
+          }),
         {
           message: `Output directory path "${invalidPath}" doesn't exist`,
         },
@@ -103,7 +123,7 @@ describe('normalizeFileNames', () => {
 
       describe('when only required args are set', () => {
         beforeEach(async () => {
-          await normalizeFileNames({ inputDirPath, outputDirPath, logger });
+          await normalizeFileNames({ inputDirPath, outputDirPath, outputFileNameFormat, logger });
         });
 
         it('copies all recognized files into output directory with normalized names', async () => {
@@ -150,6 +170,7 @@ describe('normalizeFileNames', () => {
           await normalizeFileNames({
             inputDirPath,
             outputDirPath,
+            outputFileNameFormat,
             isDryRun: true,
             logger,
           });
@@ -192,6 +213,7 @@ describe('normalizeFileNames', () => {
           await normalizeFileNames({
             inputDirPath,
             outputDirPath,
+            outputFileNameFormat,
             isFileSystemMetadataFallbackEnabled: true,
             logger,
           });
@@ -232,7 +254,7 @@ describe('normalizeFileNames', () => {
         await createFile(getResourcePath('input/file-20010203-040506.txt'));
         await createFile(getResourcePath('input/file_2001_02_03-04_05_06.txt'));
 
-        await normalizeFileNames({ inputDirPath, outputDirPath, logger });
+        await normalizeFileNames({ inputDirPath, outputDirPath, outputFileNameFormat, logger });
       });
 
       it('copies these files with the same creation time but different postfixes', async () => {
@@ -250,7 +272,7 @@ describe('normalizeFileNames', () => {
       beforeEach(async () => {
         await createFile(getResourcePath('input/file_20010203_040506.txt'));
 
-        await normalizeFileNames({ inputDirPath, outputDirPath, logger });
+        await normalizeFileNames({ inputDirPath, outputDirPath, outputFileNameFormat, logger });
       });
 
       it("doesn't crete folder for unrecognized files", async () => {

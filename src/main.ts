@@ -4,12 +4,14 @@ import normalizeFileNames from './normalizeFileNames/index.js';
 const main = async ({
   inputDirPath,
   outputDirPath,
+  outputFileNameFormat,
   isFileSystemMetadataFallbackEnabled,
   isDryRun,
   logger,
 }: {
   inputDirPath: string;
   outputDirPath: string;
+  outputFileNameFormat: string;
   isFileSystemMetadataFallbackEnabled?: boolean;
   isDryRun?: boolean;
   logger: LoggerInterface;
@@ -18,6 +20,7 @@ const main = async ({
     await normalizeFileNames({
       inputDirPath,
       outputDirPath,
+      outputFileNameFormat,
       isFileSystemMetadataFallbackEnabled,
       isDryRun,
       logger,

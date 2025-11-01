@@ -12,6 +12,7 @@ import { logParameters, validateParameters } from './parameters/index.js';
 const normalizeFileNames = async ({
   inputDirPath,
   outputDirPath,
+  outputFileNameFormat,
   unrecognizedFilesOutputDirPath = join(outputDirPath ?? '', '_UNRECOGNIZED'),
   recognizedFromFsFilesOutputDirPath = join(outputDirPath ?? '', '_RECOGNIZED_FROM_FS'),
   isFileSystemMetadataFallbackEnabled = false,
@@ -20,6 +21,7 @@ const normalizeFileNames = async ({
 }: {
   inputDirPath: string;
   outputDirPath: string;
+  outputFileNameFormat: string;
   unrecognizedFilesOutputDirPath?: string;
   recognizedFromFsFilesOutputDirPath?: string;
   isFileSystemMetadataFallbackEnabled?: boolean;
@@ -83,7 +85,11 @@ const normalizeFileNames = async ({
 
         if (creationTimeFromFileName !== null) {
           outputFileDirPath = outputDirPath;
-          outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFileName);
+          outputFileName = getOutputFileName({
+            inputFileName: fsEntry.name,
+            creationTime: creationTimeFromFileName,
+            outputFileNameFormat,
+          });
 
           fileCount.recognizedFromName += 1;
         } else if (isFileSystemMetadataFallbackEnabled) {
@@ -94,7 +100,11 @@ const normalizeFileNames = async ({
           const creationTimeFromFs = await getCreationTimeFromFileSystem(fsEntry.absolutePath);
 
           outputFileDirPath = recognizedFromFsFilesOutputDirPath;
-          outputFileName = getOutputFileName(fsEntry.name, creationTimeFromFs!);
+          outputFileName = getOutputFileName({
+            inputFileName: fsEntry.name,
+            creationTime: creationTimeFromFs!,
+            outputFileNameFormat,
+          });
 
           fileCount.recognizedFromFs += 1;
         } else {
