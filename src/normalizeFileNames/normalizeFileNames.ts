@@ -42,7 +42,7 @@ const normalizeFileNames = async ({
     });
 
     const fileCount = {
-      total: await getFileCount(inputDirPath),
+      total: await getFileCount({ dirPath: inputDirPath, logger }),
       recognizedFromName: 0,
       recognizedFromFs: 0,
       unrecognized: 0,
