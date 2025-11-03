@@ -41,10 +41,12 @@ const normalizeFileNames = async ({
       logger,
     });
 
+    const totalFileCount = await getFileCount({ dirPath: inputDirPath, logger });
+
     const fileCount = {
-      total: await getFileCount({ dirPath: inputDirPath, logger }),
+      total: totalFileCount,
       recognizedFromName: 0,
-      recognizedFromFs: 0,
+      recognizedFromFsMetadata: 0,
       unrecognized: 0,
     };
 
@@ -61,9 +63,9 @@ const normalizeFileNames = async ({
         return;
       }
 
-      const { total, recognizedFromName, recognizedFromFs, unrecognized } = fileCount;
+      const { total, recognizedFromName, recognizedFromFsMetadata, unrecognized } = fileCount;
 
-      const processed = recognizedFromName + recognizedFromFs + unrecognized;
+      const processed = recognizedFromName + recognizedFromFsMetadata + unrecognized;
 
       const progressPercentage = Math.floor(100 * (total > 0 ? processed / total : 1));
 
@@ -80,6 +82,7 @@ const normalizeFileNames = async ({
 
         let outputFileDirPath: string;
         let outputFileName: string;
+        let isRecognizedFromFsMetadata = false;
 
         const creationTimeFromFileName = getCreationTimeFromFileName(fsEntry.name);
 
@@ -106,7 +109,8 @@ const normalizeFileNames = async ({
             outputFileNameFormat,
           });
 
-          fileCount.recognizedFromFs += 1;
+          isRecognizedFromFsMetadata = true;
+          fileCount.recognizedFromFsMetadata += 1;
         } else {
           if (!isDryRun) {
             await ensureUnrecognizedFilesOutputDirCreated();
@@ -123,6 +127,7 @@ const normalizeFileNames = async ({
         await processFile({
           inputFilePath: fsEntry.absolutePath,
           outputFilePath,
+          isRecognizedFromFsMetadata,
           isDryRun,
           logger,
         });
@@ -134,12 +139,19 @@ const normalizeFileNames = async ({
     });
 
     logProgress();
+
     logger.log('');
-    logger.log(`Recognized files (from name): ${fileCount.recognizedFromName}`);
-    if (isFileSystemMetadataFallbackEnabled) {
-      logger.log(`Recognized files (from FS timestamps): ${fileCount.recognizedFromName}`);
-    } else {
-      logger.log(`Unrecognized files: ${fileCount.unrecognized}`);
+
+    if (fileCount.recognizedFromName > 0) {
+      logger.log(`Recognized from name: ${fileCount.recognizedFromName}`);
+    }
+
+    if (fileCount.recognizedFromFsMetadata > 0) {
+      logger.log(`Recognized from FS metadata: ${fileCount.recognizedFromFsMetadata}`);
+    }
+
+    if (fileCount.unrecognized > 0) {
+      logger.log(`Unrecognized: ${fileCount.unrecognized}`);
     }
   } finally {
     if (loggingIntervalId) {

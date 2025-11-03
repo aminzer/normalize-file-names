@@ -1,7 +1,8 @@
 import assert from 'node:assert';
 import { join, parse as parseFs, resolve } from 'node:path';
 import { afterEach, beforeEach, describe, it } from 'node:test';
-import { parse, isValid } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
+import { getCreationTimeFromFileSystem } from '../../fileCreationTimeParsing/index.js';
 import {
   createDir,
   createFile,
@@ -159,8 +160,8 @@ describe('normalizeFileNames', () => {
             `Output directory: "${outputDirPath}"`,
             '',
             '',
-            'Recognized files (from name): 4',
-            'Unrecognized files: 3',
+            'Recognized from name: 4',
+            'Unrecognized: 3',
           ]);
         });
       });
@@ -202,8 +203,8 @@ describe('normalizeFileNames', () => {
             '"unrecognizable_file_b.txt" -> "unrecognizable_file_b.txt"',
             '"unrecognizable_file.txt" -> "unrecognizable_file.txt"',
             '',
-            'Recognized files (from name): 4',
-            'Unrecognized files: 3',
+            'Recognized from name: 4',
+            'Unrecognized: 3',
           ]);
         });
       });
@@ -241,8 +242,68 @@ describe('normalizeFileNames', () => {
             '! For unrecognized file names creation time will be fetched from file system file metadata',
             '',
             '',
-            'Recognized files (from name): 4',
-            'Recognized files (from FS timestamps): 4',
+            'Recognized from name: 4',
+            'Recognized from FS metadata: 3',
+          ]);
+        });
+      });
+
+      describe('when both "isDryRun" and "isFileSystemMetadataFallbackEnabled" are set to "true"', () => {
+        beforeEach(async () => {
+          await normalizeFileNames({
+            inputDirPath,
+            outputDirPath,
+            outputFileNameFormat,
+            isDryRun: true,
+            isFileSystemMetadataFallbackEnabled: true,
+            logger,
+          });
+        });
+
+        it("doesn't copy files to the output directory", async () => {
+          const recognizedFileNames = await getFileNames(outputDirPath);
+
+          assert.deepStrictEqual(recognizedFileNames, []);
+        });
+
+        it("doesn't creates separate directory for recognized from FS metadata files", async () => {
+          const dirNames = await getDirNames(getResourcePath(outputDirPath));
+
+          assert.deepStrictEqual(dirNames, []);
+        });
+
+        it('outputs the expected log messages', async () => {
+          const unrecognizableFileCreationTime = await getCreationTimeFromFileSystem(
+            getResourcePath('input/unrecognizable_file.txt'),
+          );
+          const unrecognizableFileName = `${format(unrecognizableFileCreationTime!, outputFileNameFormat)}.txt`;
+
+          const unrecognizableFileACreationTime = await getCreationTimeFromFileSystem(
+            getResourcePath('input/sub_dir_1/unrecognizable_file_a.txt'),
+          );
+          const unrecognizableFileAName = `${format(unrecognizableFileACreationTime!, outputFileNameFormat)}.txt`;
+
+          const unrecognizableFileBCreationTime = await getCreationTimeFromFileSystem(
+            getResourcePath('input/sub_dir_2/sub_dir_2_1/unrecognizable_file_b.txt'),
+          );
+          const unrecognizableFileBName = `${format(unrecognizableFileBCreationTime!, outputFileNameFormat)}.txt`;
+
+          assert.deepStrictEqual(logger.getMessages(), [
+            `Input directory: "${inputDirPath}"`,
+            `Output directory: "${outputDirPath}"`,
+            "! This is dry run: files won't be copied to the output directory",
+            '! For unrecognized file names creation time will be fetched from file system file metadata',
+            '',
+            '"file_20010203_040506_2.txt" -> "2001_02_03__04_05_06_000.txt"',
+            '"2021.12.26.txt" -> "2021_12_26__00_00_00_000.txt"',
+            '"file_20020304_050607.txt" -> "2002_03_04__05_06_07_000.txt"',
+            `"unrecognizable_file_a.txt" -> "${unrecognizableFileAName}" [from FS metadata]`,
+            '"file_20030405_060708.txt" -> "2003_04_05__06_07_08_000.txt"',
+            `"unrecognizable_file_b.txt" -> "${unrecognizableFileBName}" [from FS metadata]`,
+            `"unrecognizable_file.txt" -> "${unrecognizableFileName}" [from FS metadata]`,
+            '',
+            'Recognized from name: 4',
+            'Recognized from FS metadata: 3',
           ]);
         });
       });

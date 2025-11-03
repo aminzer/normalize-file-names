@@ -5,16 +5,20 @@ import { copyFile } from '../../utils/index.js';
 const processFile = async ({
   inputFilePath,
   outputFilePath,
+  isRecognizedFromFsMetadata,
   isDryRun,
   logger,
 }: {
   inputFilePath: string;
   outputFilePath: string;
+  isRecognizedFromFsMetadata: boolean;
   isDryRun: boolean;
   logger: LoggerInterface;
 }): Promise<void> => {
   if (isDryRun) {
-    logger.log(`"${parse(inputFilePath).base}" -> "${parse(outputFilePath).base}"`);
+    logger.log(
+      `"${parse(inputFilePath).base}" -> "${parse(outputFilePath).base}"${isRecognizedFromFsMetadata ? ' [from FS metadata]' : ''}`,
+    );
     return;
   }
 
