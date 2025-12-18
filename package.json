@@ -1,6 +1,6 @@
 {
   "name": "@aminzer/normalize-file-names",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Utility for file name normalization",
   "publishConfig": {
     "access": "public"
