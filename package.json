@@ -1,6 +1,6 @@
 {
   "name": "@aminzer/normalize-file-names",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Utility for file name normalization",
   "publishConfig": {
     "access": "public"
@@ -38,7 +38,7 @@
     "typescript:check": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@aminzer/traverse-directory": "^1.2.0",
+    "@aminzer/traverse-directory": "^1.2.5",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "single-line-log": "^1.1.2"
