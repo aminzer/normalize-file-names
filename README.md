@@ -96,7 +96,11 @@ You can provide your own implementation of `LoggerInterface` for custom logging 
 ### CLI usage
 
 ```bash
-npx @aminzer/normalize-file-names --input <path> --output <path> [options]
+npm install --global @aminzer/normalize-file-names
+```
+
+```bash
+normalize-file-names --input <path> --output <path> [options]
 ```
 
 #### Flags
@@ -112,7 +116,7 @@ npx @aminzer/normalize-file-names --input <path> --output <path> [options]
 **Example:**
 
 ```bash
-npx @aminzer/normalize-file-names \
+normalize-file-names \
   --input ~/photos/raw \
   --output ~/photos/normalized \
   --fs-metadata-fallback
