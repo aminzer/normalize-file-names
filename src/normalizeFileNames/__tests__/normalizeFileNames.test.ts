@@ -3,14 +3,7 @@ import { join, parse as parseFs, resolve } from 'node:path';
 import { afterEach, beforeEach, describe, it } from 'node:test';
 import { format, isValid, parse } from 'date-fns';
 import { getCreationTimeFromFileSystem } from '../../fileCreationTimeParsing/index.js';
-import {
-  createDir,
-  createFile,
-  deleteDir,
-  getDirNames,
-  getFileNames,
-  sleep,
-} from './utils/index.js';
+import { createDir, createFile, deleteDir, getDirNames, getFileNames } from './utils/index.js';
 import normalizeFileNames from '../normalizeFileNames.js';
 import TestLogger from './TestLogger.js';
 
@@ -102,24 +95,24 @@ describe('normalizeFileNames', () => {
     describe('input directory contains both recognizable and unrecognizable files', () => {
       beforeEach(async () => {
         await createFile(getResourcePath('input/file_20010203_040506_2.txt'));
-        await createFile(getResourcePath('input/unrecognizable_file.txt'));
-
-        await sleep(50);
+        await createFile(getResourcePath('input/unrecognizable_file.txt'), {
+          creationTime: new Date('2020-01-01'),
+        });
 
         await createDir(getResourcePath('input/sub_dir_1'));
         await createFile(getResourcePath('input/sub_dir_1/file_20020304_050607.txt'));
         await createFile(getResourcePath('input/sub_dir_1/2021.12.26.txt'));
-        await createFile(getResourcePath('input/sub_dir_1/unrecognizable_file_a.txt'));
-
-        await sleep(50);
+        await createFile(getResourcePath('input/sub_dir_1/unrecognizable_file_a.txt'), {
+          creationTime: new Date('2020-02-02'),
+        });
 
         await createDir(getResourcePath('input/sub_dir_2'));
         await createFile(getResourcePath('input/sub_dir_2/file_20030405_060708.txt'));
 
-        await sleep(50);
-
         await createDir(getResourcePath('input/sub_dir_2/sub_dir_2_1'));
-        await createFile(getResourcePath('input/sub_dir_2/sub_dir_2_1/unrecognizable_file_b.txt'));
+        await createFile(getResourcePath('input/sub_dir_2/sub_dir_2_1/unrecognizable_file_b.txt'), {
+          creationTime: new Date('2020-03-03'),
+        });
       });
 
       describe('when only required args are set', () => {
@@ -326,6 +319,20 @@ describe('normalizeFileNames', () => {
           '2001_02_03__04_05_06_000__1.txt',
           '2001_02_03__04_05_06_000__2.txt',
         ]);
+      });
+    });
+
+    describe('when no logger is passed', () => {
+      beforeEach(async () => {
+        await createFile(getResourcePath('input/file_20010203_040506.txt'));
+
+        await normalizeFileNames({ inputDirPath, outputDirPath, outputFileNameFormat });
+      });
+
+      it('completes without error', async () => {
+        const fileNames = await getFileNames(outputDirPath);
+
+        assert.deepStrictEqual(fileNames, ['2001_02_03__04_05_06_000.txt']);
       });
     });
 

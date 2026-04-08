@@ -1,39 +1,39 @@
-import { LoggerInterface } from './logging/index.js';
+import configDefaults from './config/defaults.js';
+import { StdoutLogger } from './logging/index.js';
 import normalizeFileNames from './normalizeFileNames/index.js';
 
-const main = async ({
-  inputDirPath,
-  outputDirPath,
-  outputFileNameFormat,
-  isFileSystemMetadataFallbackEnabled,
-  isDryRun,
-  logger,
-}: {
-  inputDirPath: string;
-  outputDirPath: string;
-  outputFileNameFormat: string;
-  isFileSystemMetadataFallbackEnabled?: boolean;
-  isDryRun?: boolean;
-  logger: LoggerInterface;
-}): Promise<void> => {
-  try {
-    await normalizeFileNames({
-      inputDirPath,
-      outputDirPath,
-      outputFileNameFormat,
-      isFileSystemMetadataFallbackEnabled,
-      isDryRun,
-      logger,
-    });
-  } catch (err) {
-    logger.log('');
+const inputDirPath = process.env.INPUT_DIR_PATH ?? '';
 
-    if (err instanceof Error) {
-      logger.log(`Error: ${err.message}`);
-    } else {
-      logger.log(`Unknown error: ${err}`);
-    }
+const outputDirPath = process.env.OUTPUT_DIR_PATH ?? '';
+
+const outputFileNameFormat =
+  process.env.OUTPUT_FILE_NAME_FORMAT ?? configDefaults.outputFileNameFormat;
+
+const isFileSystemMetadataFallbackEnabled =
+  typeof process.env.FS_METADATA_FALLBACK === 'string'
+    ? process.env.FS_METADATA_FALLBACK === 'true'
+    : configDefaults.isFileSystemMetadataFallbackEnabled;
+
+const isDryRun =
+  typeof process.env.DRY_RUN === 'string'
+    ? process.env.DRY_RUN === 'true'
+    : configDefaults.isDryRun;
+
+const logger = new StdoutLogger();
+
+try {
+  await normalizeFileNames({
+    inputDirPath,
+    outputDirPath,
+    outputFileNameFormat,
+    isFileSystemMetadataFallbackEnabled,
+    isDryRun,
+    logger,
+  });
+} catch (err) {
+  if (err instanceof Error) {
+    logger.log(`Error: ${err.message}`);
+  } else {
+    logger.log(`Unknown error: ${err}`);
   }
-};
-
-export default main;
+}

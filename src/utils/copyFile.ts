@@ -13,7 +13,9 @@ const copyFile = async (
     saveAsNewFileVersionIfExists?: boolean;
   } = {},
 ): Promise<void> => {
-  if (!fileExists(targetFilePath) || overwriteIfExists) {
+  const targetFileExists = await fileExists(targetFilePath);
+
+  if (!targetFileExists || overwriteIfExists) {
     await copyFileFs(sourceFilePath, targetFilePath);
     return;
   }

@@ -4,7 +4,7 @@ import {
   getCreationTimeFromFileName,
   getCreationTimeFromFileSystem,
 } from '../fileCreationTimeParsing/index.js';
-import { LoggerInterface } from '../logging/index.js';
+import { LoggerInterface, NoopLogger } from '../logging/index.js';
 import { getFileCount, createDirectoryIfNotExistsCached } from '../utils/index.js';
 import { getOutputFileName, processFile } from './fileProcessing/index.js';
 import { logParameters, validateParameters } from './parameters/index.js';
@@ -17,7 +17,7 @@ const normalizeFileNames = async ({
   recognizedFromFsFilesOutputDirPath = join(outputDirPath ?? '', '_RECOGNIZED_FROM_FS'),
   isFileSystemMetadataFallbackEnabled = false,
   isDryRun = false,
-  logger,
+  logger = new NoopLogger(),
 }: {
   inputDirPath: string;
   outputDirPath: string;
@@ -26,7 +26,7 @@ const normalizeFileNames = async ({
   recognizedFromFsFilesOutputDirPath?: string;
   isFileSystemMetadataFallbackEnabled?: boolean;
   isDryRun?: boolean;
-  logger: LoggerInterface;
+  logger?: LoggerInterface;
 }) => {
   let loggingIntervalId;
 

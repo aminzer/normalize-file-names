@@ -1,13 +1,20 @@
-import { mkdir, open, readdir, rmdir, stat, unlink } from 'node:fs/promises';
+import { mkdir, open, readdir, rmdir, stat, unlink, utimes } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export const createDir = async (dirPath: string): Promise<void> => {
   await mkdir(dirPath);
 };
 
-export const createFile = async (filePath: string): Promise<void> => {
+export const createFile = async (
+  filePath: string,
+  { creationTime }: { creationTime?: Date } = {},
+): Promise<void> => {
   const fileHandle = await open(filePath, 'w');
   await fileHandle.close();
+
+  if (creationTime) {
+    await utimes(filePath, creationTime, creationTime);
+  }
 };
 
 export const deleteDir = async (dirPath: string): Promise<void> => {
