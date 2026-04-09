@@ -58,16 +58,14 @@ await normalizeFileNames({
 
 #### `normalizeFileNames` parameters
 
-| Name | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| **`inputDirPath`** | `string` | yes | — | Path to the input directory containing files to rename. Files in nested subdirectories are also processed. The original files are not modified — copies are created in the output directory. |
-| **`outputDirPath`** | `string` | yes | — | Path to the output directory where renamed files are written. All files with recognized names are copied directly into this directory's root (subdirectory structure is flattened). |
-| **`outputFileNameFormat`** | `string` | yes | — | Format of the output file names, using [date-fns format](https://date-fns.org/v4.1.0/docs/format). |
-| **`unrecognizedFilesOutputDirPath`** | `string` | no | `<outputDirPath>/_UNRECOGNIZED` | Path to the directory where files with unrecognized names are copied. |
-| **`recognizedFromFsFilesOutputDirPath`** | `string` | no | `<outputDirPath>/_RECOGNIZED_FROM_FS` | Path to the directory where files recognized via filesystem metadata are copied. |
-| **`isFileSystemMetadataFallbackEnabled`** | `boolean` | no | `false` | If enabled, files with unrecognized names will fall back to using filesystem metadata: the earlier of the file's creation (`birthtime`) and modification (`mtime`) timestamps. |
-| **`isDryRun`** | `boolean` | no | `false` | If enabled, files are not copied. Instead, the planned name changes are logged. Useful for testing recognition logic. |
-| **`logger`** | `LoggerInterface` | no | `NoopLogger` | Logger instance for progress and diagnostic output. |
+- **`inputDirPath`** (`string`, required) — Path to the input directory containing files to rename. Files in nested subdirectories are also processed. The original files are not modified — copies are created in the output directory.
+- **`outputDirPath`** (`string`, required) — Path to the output directory where renamed files are written. All files with recognized names are copied directly into this directory's root (subdirectory structure is flattened).
+- **`outputFileNameFormat`** (`string`, required) — Format of the output file names, using [date-fns format](https://date-fns.org/v4.1.0/docs/format).
+- **`unrecognizedFilesOutputDirPath`** (`string`, optional, default: `<outputDirPath>/_UNRECOGNIZED`) — Path to the directory where files with unrecognized names are copied.
+- **`recognizedFromFsFilesOutputDirPath`** (`string`, optional, default: `<outputDirPath>/_RECOGNIZED_FROM_FS`) — Path to the directory where files recognized via filesystem metadata are copied.
+- **`isFileSystemMetadataFallbackEnabled`** (`boolean`, optional, default: `false`) — If enabled, files with unrecognized names will fall back to using filesystem metadata: the earlier of the file's creation (`birthtime`) and modification (`mtime`) timestamps.
+- **`isDryRun`** (`boolean`, optional, default: `false`) — If enabled, files are not copied. Instead, the planned name changes are logged. Useful for testing recognition logic.
+- **`logger`** (`LoggerInterface`, optional, default: `NoopLogger`) — Logger instance for progress and diagnostic output.
 
 The package also exports `LoggerInterface` and `StdoutLogger`.
 
@@ -105,13 +103,13 @@ normalize-file-names --input <path> --output <path> [options]
 
 #### Flags
 
-| Flag | Description |
+| Flag | Parameter |
 | --- | --- |
-| `-i, --input <path>` | Input directory path (required) |
-| `-o, --output <path>` | Output directory path (required) |
-| `--output-file-name-format <fmt>` | Output file name format (default: `yyyy_MM_dd__HH_mm_ss_SSS`) |
-| `--fs-metadata-fallback` | Use filesystem metadata as fallback for creation date |
-| `--dry-run` | Log planned changes without copying files |
+| `-i, --input <path>` | `inputDirPath` |
+| `-o, --output <path>` | `outputDirPath` |
+| `--output-file-name-format <fmt>` | `outputFileNameFormat` |
+| `--fs-metadata-fallback` | `isFileSystemMetadataFallbackEnabled` |
+| `--dry-run` | `isDryRun` |
 
 **Example:**
 
@@ -132,15 +130,15 @@ cd normalize-file-names
 npm install
 ```
 
-Arguments are provided via environment variables or a `.env` file (supported via [dotenv](https://www.npmjs.com/package/dotenv)):
+Arguments are provided via environment variables or a `.env` file:
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| **`INPUT_DIR_PATH`** | `string` | — | Path to the input directory. |
-| **`OUTPUT_DIR_PATH`** | `string` | — | Path to the output directory. |
-| **`OUTPUT_FILE_NAME_FORMAT`** | `string` | `yyyy_MM_dd__HH_mm_ss_SSS` | Format of the output file names. |
-| **`FS_METADATA_FALLBACK`** | `boolean` | `false` | Use filesystem metadata as fallback for creation date. |
-| **`DRY_RUN`** | `boolean` | `false` | Log planned changes without copying files. |
+| Name | Parameter |
+| --- | --- |
+| **`INPUT_DIR_PATH`** | `inputDirPath` |
+| **`OUTPUT_DIR_PATH`** | `outputDirPath` |
+| **`OUTPUT_FILE_NAME_FORMAT`** | `outputFileNameFormat` |
+| **`FS_METADATA_FALLBACK`** | `isFileSystemMetadataFallbackEnabled` |
+| **`DRY_RUN`** | `isDryRun` |
 
 **Inline:**
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { parseArgs } from 'node:util';
 import configDefaults from './config/defaults.js';
 import { StdoutLogger } from './logging/index.js';
