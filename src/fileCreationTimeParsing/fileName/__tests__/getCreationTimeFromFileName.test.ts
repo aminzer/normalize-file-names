@@ -21,6 +21,11 @@ describe('getCreationTimeFromFileName', () => {
       '123456.jpg',
       '0.jpg',
       '00000000.jpg',
+      '0001_01_01.jpg',
+      '1899_12_31.jpg',
+      '9999_12_31.jpg',
+      '1920:1080:60.mp4',
+      'chapter_12_at_3_45.txt',
     ];
 
     unrecognizableFilenames.forEach((fileName) => {
@@ -58,16 +63,29 @@ describe('getCreationTimeFromFileName', () => {
         'IMG_2001_02_03___04_05_06.jpg',
         'some-text-here-2001-02-03-04-05-06.jpg',
         '20010203_040506.jpg',
+        '2001-02-03T04:05:06.jpg',
+        '20010203T040506.jpg',
+        '20010203T040506Z.jpg',
+        '2001:02:03 04:05:06.jpg',
+        'WhatsApp Image 2001-02-03 at 04.05.06.jpg',
+        '2001__02__03__04__05__06.jpg',
+        '2025_01_01_and_20010203040506.jpg',
       ].map((filePath) => ({
         filePath,
         expectedCreationTime: new Date('2001-02-03 04:05:06'),
       })),
-      ...['2001 02 03.jpg', '2001.02.03.jpg', '2001_02_03.jpg', '2001-02-03.jpg'].map(
-        (filePath) => ({
-          filePath,
-          expectedCreationTime: new Date('2001-02-03 00:00:00'),
-        }),
-      ),
+      ...[
+        '2001 02 03.jpg',
+        '2001.02.03.jpg',
+        '2001_02_03.jpg',
+        '2001-02-03.jpg',
+        '2001__02__03.jpg',
+        'IMG-20010203-WA0001.jpg',
+        'IMG_2001_02_03_at_home.jpg',
+      ].map((filePath) => ({
+        filePath,
+        expectedCreationTime: new Date('2001-02-03 00:00:00'),
+      })),
       {
         filePath: 'IMG_2001_02_03_04_05_06_007.jpg',
         expectedCreationTime: new Date('2001-02-03 04:05:06.007'),
@@ -155,6 +173,22 @@ describe('getCreationTimeFromFileName', () => {
       {
         filePath: 'IMG_20010203_0405061234.jpg',
         expectedCreationTime: new Date('2001-02-03 00:00:00'),
+      },
+      {
+        filePath: '2001-02-03T04:05:06.007.jpg',
+        expectedCreationTime: new Date('2001-02-03 04:05:06.007'),
+      },
+      {
+        filePath: '2025_01_01_and_20010203040506789.jpg',
+        expectedCreationTime: new Date('2001-02-03 04:05:06.789'),
+      },
+      {
+        filePath: '1900_01_01.jpg',
+        expectedCreationTime: new Date('1900-01-01 00:00:00'),
+      },
+      {
+        filePath: '1985_06_12.jpg',
+        expectedCreationTime: new Date('1985-06-12 00:00:00'),
       },
     ];
 
