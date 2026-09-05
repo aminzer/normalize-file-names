@@ -14,6 +14,13 @@ describe('getCreationTimeFromFileName', () => {
       '2001_04_31.jpg',
       '2001_00_01.jpg',
       '2001_13_01.jpg',
+      'IMG_202301021.jpg',
+      'ticket_20250101123456789012.jpg',
+      '99999999999999999999.jpg',
+      '1600000000.jpg',
+      '123456.jpg',
+      '0.jpg',
+      '00000000.jpg',
     ];
 
     unrecognizableFilenames.forEach((fileName) => {
@@ -120,6 +127,34 @@ describe('getCreationTimeFromFileName', () => {
       {
         filePath: 'some-file-20250315.txt',
         expectedCreationTime: new Date('2025.03.15 00:00:00'),
+      },
+      {
+        filePath: 'IMG_20259999_20250101_123456.jpg',
+        expectedCreationTime: new Date('2025-01-01 12:34:56'),
+      },
+      {
+        filePath: 'id_1234567890_20250101_123456.jpg',
+        expectedCreationTime: new Date('2025-01-01 12:34:56'),
+      },
+      {
+        filePath: '99999999_20250101.jpg',
+        expectedCreationTime: new Date('2025-01-01 00:00:00'),
+      },
+      {
+        filePath: '2025_99_99_2025_01_01.jpg',
+        expectedCreationTime: new Date('2025-01-01 00:00:00'),
+      },
+      {
+        filePath: 'invoice_20250101_20250131.jpg',
+        expectedCreationTime: new Date('2025-01-01 00:00:00'),
+      },
+      {
+        filePath: '20010203_0405061.jpg',
+        expectedCreationTime: new Date('2001-02-03 00:00:00'),
+      },
+      {
+        filePath: 'IMG_20010203_0405061234.jpg',
+        expectedCreationTime: new Date('2001-02-03 00:00:00'),
       },
     ];
 

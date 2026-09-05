@@ -1,99 +1,58 @@
 import { d2, d3, d4, d6, d8, d9, d14, d17, _ } from './regex.js';
 import { FileNameCreationTimeParser } from './types.js';
-import { parseDate } from './utils.js';
+import { parseFirstValidDate, parseUnixTimestampMs } from './utils.js';
 
 const parsers: FileNameCreationTimeParser[] = [
-  (fileName: string): Date | null => {
-    const match = fileName.match(`${d4}${_}${d2}${_}${d2}${_}+${d2}${_}${d2}${_}${d2}${_}${d3}`);
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: `${d4}${_}${d2}${_}${d2}${_}+${d2}${_}${d2}${_}${d2}${_}${d3}`,
+      format: 'yyyyMMddHHmmssSSS',
+    }),
 
-    if (!match) {
-      return null;
-    }
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: `${d4}${_}${d2}${_}${d2}${_}+${d2}${_}${d2}${_}${d2}`,
+      format: 'yyyyMMddHHmmss',
+    }),
 
-    const timeStr = match.slice(1, 8).join('');
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: `${d8}${_}+${d9}`,
+      format: 'yyyyMMddHHmmssSSS',
+    }),
 
-    return parseDate(timeStr, { format: 'yyyyMMddHHmmssSSS' });
-  },
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: `${d8}${_}+${d6}`,
+      format: 'yyyyMMddHHmmss',
+    }),
 
-  (fileName: string): Date | null => {
-    const match = fileName.match(`${d4}${_}${d2}${_}${d2}${_}+${d2}${_}${d2}${_}${d2}`);
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: `${d4}${_}${d2}${_}${d2}`,
+      format: 'yyyyMMdd',
+    }),
 
-    if (!match) {
-      return null;
-    }
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: d17,
+      format: 'yyyyMMddHHmmssSSS',
+    }),
 
-    const timeStr = match.slice(1, 7).join('');
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: d14,
+      format: 'yyyyMMddHHmmss',
+    }),
 
-    return parseDate(timeStr, { format: 'yyyyMMddHHmmss' });
-  },
+  (fileName: string): Date | null =>
+    parseFirstValidDate(fileName, {
+      pattern: d8,
+      format: 'yyyyMMdd',
+    }),
 
-  (fileName: string): Date | null => {
-    const match = fileName.match(`${d8}${_}+${d9}`);
-
-    if (!match) {
-      return null;
-    }
-
-    const timeStr = match.slice(1, 3).join('');
-
-    return parseDate(timeStr, { format: 'yyyyMMddHHmmssSSS' });
-  },
-
-  (fileName: string): Date | null => {
-    const match = fileName.match(`${d8}${_}+${d6}`);
-
-    if (!match) {
-      return null;
-    }
-
-    const timeStr = match.slice(1, 3).join('');
-
-    return parseDate(timeStr, { format: 'yyyyMMddHHmmss' });
-  },
-
-  (fileName: string): Date | null => {
-    const match = fileName.match(`${d4}${_}${d2}${_}${d2}`);
-
-    if (!match) {
-      return null;
-    }
-
-    const timeStr = match.slice(1, 4).join('');
-
-    return parseDate(timeStr, { format: 'yyyyMMdd' });
-  },
-
-  (fileName: string): Date | null => {
-    const match = fileName.match(d17);
-
-    if (!match) {
-      return null;
-    }
-
-    return parseDate(match[1], { format: 'yyyyMMddHHmmssSSS' });
-  },
-
-  (fileName: string): Date | null => {
-    const match = fileName.match(d14);
-
-    if (!match) {
-      return null;
-    }
-
-    return parseDate(match[1], { format: 'yyyyMMddHHmmss' });
-  },
-
-  (fileName: string): Date | null => {
-    const match = fileName.match(d8);
-
-    if (!match) {
-      return null;
-    }
-
-    return parseDate(match[1], { format: 'yyyyMMdd' });
-  },
-
-  (fileName: string): Date | null => (/^\d+$/.test(fileName) ? new Date(+fileName) : null),
+  (fileName: string): Date | null =>
+    /^\d+$/.test(fileName) ? parseUnixTimestampMs(fileName) : null,
 ];
 
 export default parsers;
