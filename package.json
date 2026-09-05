@@ -42,7 +42,7 @@
     "typescript:check": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@aminzer/traverse-directory": "^1.2.6",
+    "@aminzer/traverse-directory": "^1.2.9",
     "date-fns": "^4.1.0",
     "single-line-log": "^1.1.2"
   },
