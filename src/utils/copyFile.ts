@@ -8,9 +8,11 @@ const copyFile = async (
   {
     overwriteIfExists = false,
     saveAsNewFileVersionIfExists = false,
+    getFileVersionPath = getNonExistentFileVersionPath,
   }: {
     overwriteIfExists?: boolean;
     saveAsNewFileVersionIfExists?: boolean;
+    getFileVersionPath?: (possibleFilePath: string) => Promise<string>;
   } = {},
 ): Promise<void> => {
   const targetFileExists = await fileExists(targetFilePath);
@@ -21,7 +23,7 @@ const copyFile = async (
   }
 
   if (saveAsNewFileVersionIfExists) {
-    const targetFileVersionPath = await getNonExistentFileVersionPath(targetFilePath);
+    const targetFileVersionPath = await getFileVersionPath(targetFilePath);
     await copyFileFs(sourceFilePath, targetFileVersionPath);
     return;
   }

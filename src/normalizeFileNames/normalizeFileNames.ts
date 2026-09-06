@@ -5,7 +5,11 @@ import {
   getCreationTimeFromFileSystem,
 } from '../fileCreationTimeParsing/index.js';
 import { LoggerInterface, NoopLogger } from '../logging/index.js';
-import { getFileCount, createDirectoryIfNotExistsCached } from '../utils/index.js';
+import {
+  getFileCount,
+  createDirectoryIfNotExistsCached,
+  getNonExistentFileVersionPathCached,
+} from '../utils/index.js';
 import { getOutputFileName, processFile } from './fileProcessing/index.js';
 import { logParameters, validateParameters } from './parameters/index.js';
 
@@ -57,6 +61,8 @@ const normalizeFileNames = async ({
     const ensureRecognizedFromFsFilesOutputDirCreated = createDirectoryIfNotExistsCached(
       recognizedFromFsFilesOutputDirPath,
     );
+
+    const getFileVersionPath = getNonExistentFileVersionPathCached();
 
     const logProgress = (): void => {
       if (isDryRun) {
@@ -129,6 +135,7 @@ const normalizeFileNames = async ({
           outputFilePath,
           isRecognizedFromFsMetadata,
           isDryRun,
+          getFileVersionPath,
           logger,
         });
       } catch (err) {

@@ -7,12 +7,14 @@ const processFile = async ({
   outputFilePath,
   isRecognizedFromFsMetadata,
   isDryRun,
+  getFileVersionPath,
   logger,
 }: {
   inputFilePath: string;
   outputFilePath: string;
   isRecognizedFromFsMetadata: boolean;
   isDryRun: boolean;
+  getFileVersionPath?: (possibleFilePath: string) => Promise<string>;
   logger: LoggerInterface;
 }): Promise<void> => {
   if (isDryRun) {
@@ -24,6 +26,7 @@ const processFile = async ({
 
   await copyFile(inputFilePath, outputFilePath, {
     saveAsNewFileVersionIfExists: true,
+    getFileVersionPath,
   });
 };
 
